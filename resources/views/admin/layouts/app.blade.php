@@ -13,16 +13,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{asset('adminlte')}}/plugins/fontawesome-free/css/all.min.css">
+   <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('adminlte')}}/css/adminlte.min.css">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
     <!-- Navbar -->
-        @include('layouts.partials._nav')
+        @include('admin.layouts.partials._nav')
 
   <!-- Main Sidebar Container -->
-        @include('layouts.partials._sidebar')
+        @include('admin.layouts.partials._sidebar')
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -33,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           <div class="col-sm-6">
             <h1 class="m-0">{{ $pageName ?? "Dashboard" }}</h1>
           </div><!-- /.col -->
-          <div class="col-sm-6">
+          <div class="col-sm-12">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
               <li class="breadcrumb-item active">{{ $pageName ?? "Dashboard" }}</li>
@@ -72,7 +73,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{asset('adminlte')}}/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="{{asset('adminlte')}}/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('adminlte/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte')}}/js/adminlte.min.js"></script>
+@stack('js')
 </body>
 </html>
