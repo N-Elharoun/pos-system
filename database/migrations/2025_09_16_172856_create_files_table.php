@@ -7,7 +7,7 @@ class CreateFilesTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('files', function(Blueprint $table) {
+		Schema::create('files', function (Blueprint $table) {
 			$table->id();
 			$table->timestamps();
 			$table->string('usage');

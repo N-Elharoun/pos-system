@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\UnitStatusEnum;
 
-class Unit extends Model 
+class Unit extends Model
 {
 
     protected $table = 'units';
@@ -14,6 +15,12 @@ class Unit extends Model
     public function items()
     {
         return $this->hasMany('App\Models\Item');
+    }
+    protected function casts(): array
+    {
+        return [
+            'status' => UnitStatusEnum::class
+        ];
     }
 
 }

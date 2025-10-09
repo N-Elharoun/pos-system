@@ -1,14 +1,14 @@
 @extends('admin.layouts.app',[
-    'pageName'=>__('trans.users_page'),
+    'pageName' => __('trans.categories_page'),
     ])
 @section('content')
     <div class="row">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">@lang('trans.users_list')</h3>
+                    <h3 class="card-title">@lang('trans.categories_list')</h3>
                     <div class="card-tools">
-                        <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
+                        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> @lang('trans.create')
                         </a>
                     </div>
@@ -18,44 +18,43 @@
                     @include('admin.layouts.partials._flash')
                     <table class="table table-bordered">
                         <thead>
-                            <tr>
-                                <th style="width: 10px">#</th>
-                                <th style="width: 250px">@lang('trans.username')</th>
-                                <th style="width: 350px">@lang('trans.email')</th>
-                                <th style="width: 250px">@lang('trans.full_name')</th>
-                                <th>@lang('trans.status')</th>
-                                <th>@lang('trans.action')</th>
-                            </tr>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th style="width: 250px">@lang('trans.name')</th>
+                            <th style="width: 350px">@lang('trans.items')</th>
+                            <th>@lang('trans.status')</th>
+                            <th>@lang('trans.action')</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach($users as $user)
+                            @foreach($categories as $category)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{ $user->username }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->full_name }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $user->status->style() }}">{{ $user->status->label() }}</span>
+                                    <td>{{ $category->name }}</td>
+                                    @if($category->items->count())
+                                        <td>{{ $category->items->count()}} Items</td>
+                                    @else
+                                        <td>@lang('trans.no_items')</td>
+                                    @endif
+                                        <td>
+                                        <span class="badge bg-{{ $category->status->style() }}">{{ $category->status->label() }}</span>
                                     </td>
                                     <td>
-                                        <a href="{{route('admin.users.show',$user->id)}}" class="btn btn-sm btn-info">@lang('trans.view')</a>
-                                        <a href="{{  route('admin.users.edit',$user->id) }}" class="btn btn-sm btn-info">@lang('trans.edit')</a>
-                                        @if(auth()->id() != $user->id)
+                                        <a href="{{  route('admin.categories.edit',$category->id) }}" class="btn btn-sm btn-info">@lang('trans.edit')</a>
                                             <a href="#"
-                                                data-url="{{ route('admin.users.destroy', $user->id) }}"
-                                                data-id="{{$user->id}}"
+                                                data-url="{{ route('admin.categories.destroy', $category->id) }}"
+                                                data-id="{{$category->id}}"
                                                 class="btn btn-danger btn-sm delete-button">
                                                 <i class="fas fa-trash"></i>
                                             </a>
-                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-                </div>
-                <div class="mt-4">
-                    {{ $users->links() }}
+                    <div class="mt-4">
+                        {{ $categories->links() }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,7 +86,7 @@
                             location.reload();
                         },
                         error: function (xhr) {
-                            Swal.fire("Error!", "An error occurred while deleting the user.", "error");
+                            Swal.fire("Error!", "An error occurred while deleting the category.", "error");
                         }
                     });
                 }

@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Enums\UserStatusEnum;
 use App\Http\Requests\Admin\UserRequest;
- 
+
 class UserController extends Controller
 {
     /**
@@ -15,8 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users=User::paginate(10);
-        return view('admin.users.index',compact('users'));
+        $users = User::paginate(10);
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -24,8 +24,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        $userstatuses=UserStatusEnum::labels();
-        return view('admin.users.create',compact('userstatuses'));
+        $userstatuses = UserStatusEnum::labels();
+        return view('admin.users.create', compact('userstatuses'));
     }
 
     /**
@@ -34,7 +34,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         User::create($request->validated());
-        return to_route('admin.users.index')->with('add_user','user added successfully!');
+        return to_route('admin.users.index')->with('success', 'user added successfully!');
     }
 
     /**
@@ -42,8 +42,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        $user=User::findOrFail($id);
-        return view('admin.users.show',compact('user'));
+        $user = User::findOrFail($id);
+        return view('admin.users.show', compact('user'));
     }
 
     /**
@@ -51,9 +51,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $userstatuses=UserStatusEnum::labels();
-        $user=User::findOrFail($id);
-        return view('admin.users.edit',compact('user','userstatuses'));
+        $userstatuses = UserStatusEnum::labels();
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('user', 'userstatuses'));
     }
 
     /**
@@ -61,9 +61,13 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, string $id)
     {
-        $user=User::findOrFail($id);
-       $user->update($request->validated());
-        return to_route('admin.users.index')->with('update_user','User updated successfully !');
+        $data = $request->validated();
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+        $user = User::findOrFail($id);
+        $user->update($data);
+        return to_route('admin.users.index')->with('success', 'User updated successfully !');
     }
 
     /**
@@ -71,11 +75,11 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        $user=User::findOrFail($id);
+        $user = User::findOrFail($id);
         $user->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'User deleted successfully.'
             ]);
-        }
+    }
 }

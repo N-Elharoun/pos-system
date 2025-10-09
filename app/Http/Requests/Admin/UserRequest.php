@@ -22,8 +22,8 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string|max:255|unique:users,username,' ,
-            'email' => 'nullable|email|max:255|unique:users,email,' ,
+            'username' => 'required|string|max:255|unique:users,username,' . $this->route('user') ,
+            'email' => 'nullable|email|max:255|unique:users,email,' . $this->route('user') ,
             'password' => ($this->isMethod('post') ? 'required|' : 'nullable|') . 'string|min:8|confirmed',
             'full_name' => 'required|string|max:255',
             'status' => 'required|in:1,2',
