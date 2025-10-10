@@ -73,8 +73,23 @@ return [
     'choose_unit' => 'choose unit',
     'you_can_select_multiple_images' => 'you can select multiple images',
     'status' => 'Status',
-    // Sidebare
+    // Clients Views
+    'clients_page' => "Client Page",
+    'clients_list' => 'Client List',
+    'phone' => 'Phone',
+    'address' => 'Address',
+    'balance' => 'Balance',
+    'registered_via' => 'Registered Via',
+    'create_client' => 'Create Client',
+    'edit_client' => 'Edit Client',
+    'enter_phone' => 'Enter Phone',
+    'enter_address' => 'Enter Address',
+    'enter_balance' => 'Enter Balance',
+    'pos' => 'Pos',
+    'app' => 'App',
+    // Sidebar
     'users' => 'Users',
     'categories' => 'Categories',
-    'units' => 'units',
+    'units' => 'Units',
+    'clients' => 'Clients',
 ];

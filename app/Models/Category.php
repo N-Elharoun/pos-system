@@ -8,6 +8,8 @@ use App\Enums\CategoryStatusEnum;
 
 class Category extends Model
 {
+    use HasFactory;
+
     protected $table = 'categories';
     public $timestamps = true;
     protected $fillable = array('name', 'status');

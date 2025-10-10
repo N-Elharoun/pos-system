@@ -2,12 +2,13 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use App\Enums\ClientRegistrationEnum;
 
 class CreateClientsTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('clients', function(Blueprint $table) {
+		Schema::create('clients', function (Blueprint $table) {
 			$table->id();
 			$table->timestamps();
 			$table->softDeletes();
@@ -15,8 +16,9 @@ class CreateClientsTable extends Migration {
 			$table->string('email')->unique();
 			$table->string('phone')->unique();
 			$table->string('address');
-			$table->decimal('balance', 12,2);
+			$table->decimal('balance', 12, 2);
 			$table->tinyInteger('status');
+			$table->tinyInteger('registered_via')->default(ClientRegistrationEnum::Pos);
 		});
 	}
 
