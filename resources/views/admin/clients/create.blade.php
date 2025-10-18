@@ -68,7 +68,7 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label >@lang('trans.status')</label>
+                            <label for='status'>@lang('trans.status')</label>
                             @foreach($clientStatus as $value =>$label)
                                 <div class="form-check">
                                     <input type="radio" class="form-check-input" id="{{ $label }}"

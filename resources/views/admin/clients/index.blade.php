@@ -21,12 +21,12 @@
                             <tr>
                                 <th style="width: 10px">#</th>
                                 <th>@lang('trans.name')</th>
-                                <th >@lang('trans.email')</th>
+                                <th>@lang('trans.email')</th>
                                 <th>@lang('trans.phone')</th>
                                 <th>@lang('trans.address')</th>
                                 <th>@lang('trans.balance')</th>
                                 <th>@lang('trans.status')</th>
-                                <th >@lang('trans.registered_via')</th>
+                                <th style="width: 10px">@lang('trans.registered_via')</th>
                                 <th style="width: 150px">@lang('trans.action')</th>
                             </tr>
                         </thead>
@@ -46,7 +46,6 @@
                                         <span class="badge bg-{{ $client->registered_via->style() }}">{{ $client->registered_via->label() }}</span>
                                     </td>
                                     <td>
-                                        <a href="{{route('admin.clients.show',$client->id)}}" class="btn btn-sm btn-info">@lang('trans.view')</a>
                                         <a href="{{  route('admin.clients.edit',$client->id) }}" class="btn btn-sm btn-info">@lang('trans.edit')</a>
                                         <a href="#"
                                             data-url="{{ route('admin.clients.destroy', $client->id) }}"

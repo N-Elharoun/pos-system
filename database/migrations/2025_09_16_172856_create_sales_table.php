@@ -13,10 +13,10 @@ class CreateSalesTable extends Migration {
 			$table->bigInteger('client_id')->unsigned();
 			$table->bigInteger('user_id')->unsigned();
 			$table->bigInteger('safe_id')->unsigned();
-			$table->decimal('total', 10,2);
-			$table->decimal('discount', 10,2);
+			$table->decimal('total', 10,2)->default(0);
+			$table->decimal('discount_value', 10,2)->default(0);
 			$table->tinyInteger('discount_type');
-			$table->decimal('shipping_cost', 10,2);
+			$table->decimal('shipping_cost', 10,2)->default(0);
 			$table->decimal('net_amount', 10,2);
 			$table->decimal('paid_amount', 10,2);
 			$table->decimal('remaining_amount', 10,2);

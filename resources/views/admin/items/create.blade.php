@@ -124,7 +124,7 @@
                                     <option value="">-- @lang('trans.choose_unit') --</option>
                                     @foreach ($units as $unit)
                                         <option value="{{ $unit->id }}"
-                                            {{ (string) old('unit_id') === (string) $unit->id ? 'selected' : '' }}>
+                                            {{ (string) old('unit_id') === (string) $unit->id ?  'selected' : '' }}>
                                             {{ $unit->name }}
                                         </option>
                                     @endforeach

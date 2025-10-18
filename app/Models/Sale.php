@@ -9,7 +9,9 @@ class Sale extends Model
 
     protected $table = 'sales';
     public $timestamps = true;
-    protected $fillable = array('total', 'discount', 'discount_type', 'shipping_cost', 'net_amount', 'paid_amount', 'remaining_amount', 'invoice_number', 'payment_type');
+    protected $fillable = array(
+        'total','discount_value', 'discount_type', 'shipping_cost', 'net_amount', 'paid_amount',
+        'remaining_amount', 'invoice_number', 'payment_type', 'client_id', 'user_id', 'safe_id');
 
     public function safeTransactions()
     {
@@ -33,7 +35,7 @@ class Sale extends Model
 
     public function items()
     {
-        return $this->morphToMany('App\Models\Item', 'itemable')->withPivot('unit_price','quantity','total_price');
+        return $this->morphToMany('App\Models\Item', 'itemable')->withPivot('unit_price', 'quantity', 'total_price');
     }
 
 }

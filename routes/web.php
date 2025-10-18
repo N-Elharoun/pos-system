@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\SaleController;
 
 Route::redirect('/', 'admin/home');
 
@@ -19,5 +20,6 @@ Route::group(['prefix' => 'admin','as' => 'admin.'], function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('items', ItemController::class);
         Route::resource('clients', ClientController::class);
+        Route::resource('sales', SaleController::class)->only('create', 'store');
     });
 });

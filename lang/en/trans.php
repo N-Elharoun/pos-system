@@ -87,9 +87,20 @@ return [
     'enter_balance' => 'Enter Balance',
     'pos' => 'Pos',
     'app' => 'App',
+    // Sales
+    'sales_create' => 'Sales create',
+    'invoice_number' => 'Invoice Number',
+    'date' => 'Date',
+    'item' => 'Item',
+    'safe' => 'Safe',
+    'qty' => 'Qty',
+    'notes' => 'Notes',
+    'choose' => 'choose',
     // Sidebar
     'users' => 'Users',
     'categories' => 'Categories',
     'units' => 'Units',
     'clients' => 'Clients',
+    'sales' => 'Sales',
+    'create_sale' => 'Create sale'
 ];
