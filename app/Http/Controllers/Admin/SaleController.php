@@ -6,6 +6,8 @@ use App\Models\Sale;
 use App\Enums\ItemStatusEnum;
 use App\Enums\SafeStatusEnum;
 use App\Enums\UnitStatusEnum;
+use App\Enums\SafeTransactionTypeEnum;
+use App\Enums\ClientAccountTransactionTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Client;
@@ -17,6 +19,7 @@ use App\Enums\DiscountTypeEnum;
 use App\Enums\PaymentTypeEnum;
 use App\Http\Requests\Admin\SaleRequest;
 use Auth;
+use DB ;
 
 class SaleController extends Controller
 {
@@ -35,12 +38,12 @@ class SaleController extends Controller
     }
     public function store(SaleRequest $request)
     {
+        DB::beginTransaction();
         $validated = $request->validated();
         $total = 0 ;
         $discountAmount = 0;
         $remaining = 0 ;
-        foreach ($validated['items'] as $item) {
-            $id = $item['item_id'] ;
+        foreach ($validated['items'] as $id => $item) {
             $selectedItem = Item::find($id);
             $totalPrice = $selectedItem->price * $item['quantity'];
             $total += $totalPrice;
@@ -54,7 +57,7 @@ class SaleController extends Controller
             $selectedItem->decrement('quantity', $item['quantity']);
         }
 
-        $discountValue = $validated['discount_value'] ;
+        $discountValue = $validated['discount_value'] ?? 0 ;
 
         if ($validated['discount_type'] == DiscountTypeEnum::Percentage->value) {
             $discountAmount = ($discountValue / 100) * $total;
@@ -83,8 +86,32 @@ class SaleController extends Controller
             "remaining_amount" => $remaining,
             "invoice_number" => $validated['invoice_number'],
             "payment_type" => $validated['payment_type'],
+            "sale_date" => $validated['sale_date'],
         ]);
+        if ($paid > 0) {
+            $sale->safe->increment('balance', $paid);
+            $sale->safeTransactions()->create([
+                'user_id' => Auth::id(),
+                'safe_id' =>  $validated['safe_id'],
+                'type' => SafeTransactionTypeEnum::In->value,
+                'amount' => $paid,
+                'description' => 'Sale Payment, Invoice #:' . $sale->invoice_number,
+                'balance_after' => $sale->safe->fresh()->balance,
+            ]);
+        }
+        if ($remaining) {
+            $sale->client->increment('balance', $remaining);
+            $sale->clientAccountTransaction()->create([
+                'user_id' => Auth::id(),
+                'client_id' => $validated['client_id'],
+                'type' => ClientAccountTransactionTypeEnum::Credit->value,
+                'amount' => $remaining,
+                'description' => 'Sale Remaining Amount, Invoice #: ' . $sale->invoice_number,
+                'balance_after' => $sale->client->fresh()->balance,
+            ]);
+        }
         $sale->items()->attach($itemsData);
+        DB::commit();
         @dd($request->all());
     }
 }

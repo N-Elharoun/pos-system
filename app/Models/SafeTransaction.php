@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SafeTransaction extends Model 
+class SafeTransaction extends Model
 {
-
     protected $table = 'safe_transactions';
     public $timestamps = true;
-    protected $fillable = array('type', 'amount', 'description', 'balance_after');
+    protected $fillable = array('type', 'amount', 'description', 'balance_after', 'safe_id', 'user_id');
 
     public function safe()
     {
@@ -25,5 +24,4 @@ class SafeTransaction extends Model
     {
         return $this->morphTo();
     }
-
 }

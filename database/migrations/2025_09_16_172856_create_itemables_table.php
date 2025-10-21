@@ -11,7 +11,7 @@ class CreateItemablesTable extends Migration {
 			$table->id();
 			$table->timestamps();
 			$table->morphs('itemable');
-			$table->bigInteger('item_id');
+			$table->unsignedBigInteger('item_id');
 			$table->decimal('quantity');
 			$table->decimal('unit_price', 10,2);
 			$table->decimal('total_price', 10,2);

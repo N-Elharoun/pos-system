@@ -23,7 +23,7 @@ class ClientFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
             'address' => $this->faker->address,
-            'balance' => $this->faker->randomFloat(2,0,10000),
+            'balance' => $this->faker->randomFloat(2, 0, 10000),
             'status' => $this->faker->randomElement([ClientStatusEnum::Active, ClientStatusEnum::Inactive]),
             'registered_via' => $this->faker->randomElement([ClientRegistrationEnum::Pos,ClientRegistrationEnum::App]),
         ];

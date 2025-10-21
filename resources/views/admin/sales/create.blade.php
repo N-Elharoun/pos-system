@@ -146,7 +146,7 @@
                                     <th scope="col" style="width: 40px">#</th>
                                     <th>@lang('trans.name')</th>
                                     <th>@lang('trans.price')</th>
-                                    <th>@lang('trans.qnt')</th>
+                                    <th>@lang('trans.qty')</th>
                                     <th style="width: 50px" >@lang('trans.total')</th>
                                     <th>@lang('trans.notes')</th>
                                 </tr>
@@ -283,14 +283,14 @@
             let selectedItem = $("#item_id option:selected");
             let itemName = selectedItem.text()
             let itemPrice = selectedItem.data('price');
-            let qnt = $("#qty")
-            var itemQty = qnt.val();
+            let qty = $("#qty")
+            var itemQty = qty.val();
             let notes = $("#notes")
             let itemNotes = notes.val();
             let itemTotal = Math.round((itemPrice * itemQty) * 100) / 100;
             console.log(itemTotal)
 
-            // validate inputs : item chosen , qnt , qnt > 0 , qnt <= available qnt
+            // validate inputs : item chosen , qty , qty > 0 , qty <= available qty
             if (!itemID) {
                 // sweelalet error
                 Swal.fire({
@@ -336,7 +336,7 @@
             $("#total_price").text(totalPrice);
             calculateDiscount();
             item.val("").trigger('change')
-            qnt.val("")
+            qty.val("")
             notes.val("")
             
         });
