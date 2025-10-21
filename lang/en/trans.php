@@ -29,6 +29,7 @@ return [
     'edit_category' => 'Edit Category',
     'create_category' => 'Create Category',
     'no_items' => 'No Items',
+    'no_photo' => 'No Photo',
     // Unit Views
     'units_page' => 'Units Page',
     'units_list' => 'Units List',

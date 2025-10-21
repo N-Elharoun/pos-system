@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\CategoryStatusEnum;
+use App\Traits\PhotoManagementTrait;
 
 class Category extends Model
 {
     use HasFactory;
-
+    use PhotoManagementTrait;
+    
     protected $table = 'categories';
     public $timestamps = true;
     protected $fillable = array('name', 'status');
@@ -22,6 +24,7 @@ class Category extends Model
     public function photo()
     {
         return $this->morphOne('App\Models\File', 'fileable')->where('usage', 'category_photo');
+        
     }
 
     protected function casts(): array

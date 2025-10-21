@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use  App\Enums\CategoryStatusEnum;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -34,9 +35,12 @@ class CategoryController extends Controller
     {
         $data = $request->validate([
             'name' => ['required','unique:categories'],
-            'status' => ['required','in:1,2']
+            'status' => ['required','in:1,2'],
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ]);
-        Category::create($data);
+        $category = Category::create($data);
+        $category->uploadPhoto($request, 'photo', 'categories', 'category_photo');
         return to_route('admin.categories.index')->with('success', 'Category added successfully!');
     }
 
@@ -68,8 +72,11 @@ class CategoryController extends Controller
         $category = Category::findOrFail($id);
         $data = $request->validate([
             'name' => 'required','unique:categories,name,' . $category->id ,
-            'status' => ['required','in:1,2']
+            'status' => ['required','in:1,2'],
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ]);
+        $category->uploadPhoto($request, 'photo', 'categories', 'category_photo');
         $category->update($data);
         return to_route('admin.categories.index')->with('success', 'Category updated successfully!');
     }
@@ -80,6 +87,7 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
+        $category->deletePhoto();
         $category->delete();
         return response()->json([
             'status' => 'success',

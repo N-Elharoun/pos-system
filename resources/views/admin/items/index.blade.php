@@ -20,6 +20,7 @@
                         <thead>
                         <tr>
                             <th style="width: 10px">#</th>
+                            <th >@lang('trans.photo')</th>
                             <th style="width: 50px">@lang('trans.name')</th>
                             <th>@lang('trans.item_code')</th>
                             <th style="width: 200px">@lang('trans.description')</th>
@@ -37,6 +38,15 @@
                             @foreach($items as $item)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
+                                    @if ($item->photo)
+                                        <td>
+                                            <img src="{{ asset('storage/' . $item->photo->path) }}" alt="Current" width="50">
+                                        </td>
+                                    @else
+                                        <td>
+                                            @lang("trans.no_photo")
+                                        </td>
+                                    @endif
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->item_code}}</td>
                                     <td>{{ $item->description }}</td>

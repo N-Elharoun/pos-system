@@ -20,6 +20,7 @@
                         <thead>
                         <tr>
                             <th style="width: 10px">#</th>
+                            <th style="width: 250px">@lang('trans.photo')</th>
                             <th style="width: 250px">@lang('trans.name')</th>
                             <th style="width: 350px">@lang('trans.items')</th>
                             <th>@lang('trans.status')</th>
@@ -30,6 +31,15 @@
                             @foreach($categories as $category)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
+                                    @if ($category->photo)
+                                        <td>
+                                            <img src="{{ asset('storage/' . $category->photo->path) }}" alt="Current" width="150">
+                                        </td>
+                                    @else
+                                        <td>
+                                            @lang("trans.no_photo")
+                                        </td>
+                                    @endif
                                     <td>{{ $category->name }}</td>
                                     @if($category->items->count())
                                         <td>{{ $category->items->count()}} Items</td>

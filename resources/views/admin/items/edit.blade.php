@@ -85,10 +85,10 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                            @if ($item->mainPhoto)
+                            @if ($item->photo)
                                 <div style="margin-top: 10px;">
                                     <strong>@lang('trans.photo'):</strong><br>
-                                    <img src="{{ asset('storage/' . $item->mainPhoto->path) }}" alt="Current" width="150">
+                                    <img src="{{ asset('storage/' . $item->photo->path) }}" alt="Current" width="150">
                                 </div>
                             @endif
                         </div>

@@ -10,7 +10,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{  route('admin.categories.update',$category->id) }} " id ="main-form" method="POST">
+                    <form action="{{  route('admin.categories.update',$category->id) }} " id ="main-form" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -22,6 +22,21 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                        </div>
+                         <div class="form-group">
+                            <label for="photo">@lang('trans.photo')</label>
+                            <input type="file" name="photo" id="photo" accept="image/*" class="form-control @error('photo') is-invalid @enderror" >
+                            @error('photo')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                            @if ($category->photo)
+                                <div style="margin-top: 10px;">
+                                    <strong>@lang('trans.photo'):</strong><br>
+                                    <img src="{{ asset('storage/' . $category->photo->path) }}" alt="Current" width="150">
+                                </div>
+                            @endif
                         </div>
                         @foreach($categorystatuses as $value=>$label)
                             <div class="form-check">

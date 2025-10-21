@@ -13,15 +13,19 @@
           <div class="card-body">
             <div class="row">
               <div class="col-12 col-sm-6">
-                <div class="col-12">
-                  <img src="{{ asset('storage/' . $item->mainPhoto->path) }}" class="product-image" alt="Main">
-                </div>
+                @if($item->photo)
+                  <div class="col-12">
+                    <img src="{{ asset('storage/' . $item->photo->path) }}" class="product-image" alt="Main">
+                  </div>
+                @endif
                 <div class="col-12 product-image-thumbs">
-                  @foreach ($item->gallery as $gallery)
-                    <div class="product-image-thumb">
-                      <img src="{{ asset('storage/' . $gallery->path) }}" alt="gallery">
-                    </div>
-                  @endforeach
+                  @if ($item->gallery)
+                    @foreach ($item->gallery as $gallery)
+                      <div class="product-image-thumb">
+                        <img src="{{ asset('storage/' . $gallery->path) }}" alt="gallery">
+                      </div>
+                    @endforeach
+                  @endif
                 </div>
               </div>
               <div class="col-12 col-sm-6">

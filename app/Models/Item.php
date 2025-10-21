@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\PhotoManagementTrait;
 
 class Item extends Model
 {
     use HasFactory;
+    use PhotoManagementTrait;
+    
     protected $table = 'items';
     public $timestamps = true;
     protected $dates = ['deleted_at'];
@@ -24,7 +27,7 @@ class Item extends Model
         return $this->belongsTo('App\Models\Category');
     }
 
-    public function mainPhoto()
+    public function photo()
     {
         return $this->morphOne('App\Models\File', 'fileable')->where('usage', 'item_photo');
     }

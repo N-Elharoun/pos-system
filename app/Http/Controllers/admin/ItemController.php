@@ -37,29 +37,8 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
         $item = Item::create($request->validated());
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $ext = $file->getClientOriginalExtension();
-            $path = $file->storeAs('items', $fileName, 'public');
-            $item->mainPhoto()->create([
-            'path' => $path,
-            'ext' => $ext,
-            'usage' => 'item_photo'
-            ]) ;
-        }
-        if ($request->hasfile('gallery')) {
-            foreach ($request->file('gallery') as $gallery) {
-                $fileName = time() . '_' . $gallery->getClientOriginalName();
-                $path = $gallery->storeAs('items/gallery', $fileName, 'public');
-                $ext = $gallery->getClientOriginalExtension();
-                $item->gallery()->create([
-                    'path' => $path,
-                    'ext' => $ext,
-                    'usage' => 'item_gallery',
-                ]);
-            }
-        }
+        $item->uploadPhoto($request, 'photo', 'items', 'item_photo');
+        $item->uploadGallery($request, 'gallery', 'items/gallery', 'item_gallery');
         return to_route('admin.items.index')->with('success', 'Item created successfully.');
     }
 
@@ -90,40 +69,8 @@ class ItemController extends Controller
     {
         $item = Item::findOrFail($id);
         $item->update($request->validated());
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $fileName = time() . "_" . $file->getClientOriginalName();
-            $path = $file->storeAs('items', $fileName, 'public');
-            $ext = $file->getClientOriginalExtension();
-            if ($item->mainPhoto) {
-                Storage::disk('public')->delete($item->mainPhoto->path);
-                $item->mainPhoto->update([
-                    'path' => $path,
-                    'ext' => $ext,
-                ]);
-            } else {
-                $item->mainPhoto()->create([
-                    'path' => $path,
-                    'ext' => $ext,
-                    'usage' => 'item_photo',
-                ]);
-            }
-        }
-        if ($request->hasFile('gallery')) {
-            foreach ($item->gallery as $oldGallery) {
-                Storage::disk('public')->delete($oldGallery->path);
-                $oldGallery->delete();
-            }
-            foreach ($request->file('gallery') as $galleryFile) {
-                $path = $galleryFile->store('items/gallery', 'public');
-
-                $item->gallery()->create([
-                    'path'  => $path,
-                    'ext'   => $galleryFile->getClientOriginalExtension(),
-                    'usage' => 'item_gallery',
-                ]);
-            }
-        }
+        $item->uploadPhoto($request, 'photo', 'items', 'item_photo');
+        $item->uploadGallery($request, 'gallery', 'items/gallery', 'item_gallery');
         return to_route('admin.items.index')->with('success', 'Item updated successfully.');
     }
 
@@ -136,13 +83,8 @@ class ItemController extends Controller
         if ($item->sales()->exists() || $item->returns()->exists()) {
             return to_route('admin.items.index')->with('error', 'Cannot delete item with associated sales or returns.');
         }
-        if ($item->mainPhoto) {
-            Storage::disk('public')->delete($item->mainPhoto->path);
-        }
-        foreach ($item->gallery as $oldGallery) {
-            Storage::disk('public')->delete($oldGallery->path);
-            $oldGallery->delete();
-        }
+        $item->deletePhoto();
+        $item->deleteGallery();
         $item->delete();
         return response()->json([
             'status' => 'success',
