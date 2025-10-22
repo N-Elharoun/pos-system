@@ -81,14 +81,17 @@ class ItemController extends Controller
     {
         $item = Item::findOrFail($id);
         if ($item->sales()->exists() || $item->returns()->exists()) {
-            return to_route('admin.items.index')->with('error', 'Cannot delete item with associated sales or returns.');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cannot delete item with associated sales or returns.',
+            ]);
         }
         $item->deletePhoto();
         $item->deleteGallery();
         $item->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'item deleted successfully'
+            'message' => 'Item deleted successfully'
             ]);
     }
 }

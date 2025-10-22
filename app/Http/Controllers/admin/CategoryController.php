@@ -87,11 +87,17 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         $category = Category::findOrFail($id);
+        if ($category->items()->exists()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cannot delete category with associated items.',
+            ]);
+        }
         $category->deletePhoto();
         $category->delete();
         return response()->json([
             'status' => 'success',
-            'message' => 'Unit deleted successfully.'
+            'message' => 'Category deleted successfully.'
         ]);
     }
 }

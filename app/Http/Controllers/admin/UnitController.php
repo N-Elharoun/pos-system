@@ -78,6 +78,12 @@ class UnitController extends Controller
     public function destroy(string $id)
     {
         $unit = Unit::findOrFail($id);
+        if ($unit->items()->exists()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Cannot delete unit with associated items.',
+            ]);
+        }
         $unit->delete();
         return response()->json([
             'status' => 'success',

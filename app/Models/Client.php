@@ -9,7 +9,7 @@ use App\Enums\ClientRegistrationEnum;
 use App\Enums\ClientStatusEnum;
 
 class Client extends Model
-{ 
+{
     use HasFactory;
     protected $table = 'clients';
     public $timestamps = true;
@@ -18,12 +18,16 @@ class Client extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = array('name', 'email', 'phone', 'address', 'balance', 'status','registered_via');
-     protected function casts(): array
+    
+    public function sales()
+    {
+        return $this->hasMany('App\Models\Sale');
+    }
+    protected function casts(): array
     {
         return [
             'status' => ClientstatusEnum::class,
             'registered_via' => ClientRegistrationEnum::class
         ];
     }
-
 }
