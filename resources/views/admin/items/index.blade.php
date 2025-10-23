@@ -23,12 +23,13 @@
                             <th >@lang('trans.photo')</th>
                             <th style="width: 50px">@lang('trans.name')</th>
                             <th>@lang('trans.item_code')</th>
-                            <th style="width: 200px">@lang('trans.description')</th>
+                            <th style="width: 150px">@lang('trans.description')</th>
                             <th>@lang('trans.price')</th>
                             <th style="width: 10px">@lang('trans.quantity')</th>
                             <th style="width: 10px">@lang('trans.m.stock')</th>
                             <th style="width: 50px">@lang('trans.category')</th>
                             <th>@lang('trans.unit')</th>
+                            <th style="width: 10px">@lang('trans.status')</th>
                             <th style="width: 10px">@lang('trans.show_in_store')</th>
                             <th>@lang('trans.action')</th>
 
@@ -55,15 +56,16 @@
                                     <td>{{ $item->minimum_stock}}</td>
                                     <td>{{ $item->category?->name  ?? 'no category' }}</td>
                                     <td>{{ $item->unit?->name ??  'no unit'}}</td>
-                                    @if($item->is_shown_in_store==1)
-                                        <td>
-                                            <span class="badge bg-success">@lang('trans.show')</span>
-                                        </td>
-                                    @else
-                                        <td>
-                                            <span class="badge bg-danger">@lang('trans.hide')</span>
-                                        </td>
-                                    @endif
+                                    <td>
+                                        <span class="badge bg-{{ $item->status->style() }}">
+                                            {{ $item->status->label() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ $item->is_shown_in_store->style() }}">
+                                            {{ $item->is_shown_in_store->label() }}
+                                        </span>
+                                    </td>
                                     <td>
                                         <a href="{{route('admin.items.show',$item->id)}}" class="btn btn-sm btn-info">@lang('trans.view')</a>
                                         <a href="{{  route('admin.items.edit',$item->id) }}" class="btn btn-sm btn-info">@lang('trans.edit')</a>

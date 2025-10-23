@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Item;
-use App\Models\category;
-use App\Models\unit;
+use App\Models\Category;
+use App\Models\Unit;
+use Illuminate\Http\Request;
 use App\Http\Requests\Admin\ItemRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Enums\CategoryStatusEnum;
+use App\Enums\UnitStatusEnum;
+use App\Enums\ItemShowInStore;
+use App\Enums\ItemStatusEnum;
 
 class ItemController extends Controller
 {
@@ -26,9 +29,11 @@ class ItemController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        $units = Unit::all();
-        return view('admin.items.create', compact('categories', 'units'));
+        $categories = Category::where('status', CategoryStatusEnum::Active)->get();
+        $units = Unit::where('status', UnitStatusEnum::Active)->get();
+        $itemShows = ItemShowInStore::labels();
+        $itemStatuses = ItemStatusEnum::labels();
+        return view('admin.items.create', compact('categories', 'units', 'itemShows', 'itemStatuses'));
     }
 
     /**
@@ -56,10 +61,12 @@ class ItemController extends Controller
      */
     public function edit(string $id)
     {
-        $categories = Category::all();
-        $units = Unit::all();
+        $categories = Category::where('status', CategoryStatusEnum::Active)->get();
+        $units = Unit::where('status', UnitStatusEnum::Active)->get();
+        $itemShows = ItemShowInStore::labels();
+        $itemStatuses = ItemStatusEnum::labels();
         $item = Item::findOrFail($id);
-        return view('admin.items.edit', compact('item', 'categories', 'units'));
+        return view('admin.items.edit', compact('item', 'categories', 'units', 'itemShows', 'itemStatuses'));
     }
 
     /**

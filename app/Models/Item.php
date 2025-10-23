@@ -5,18 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\ItemShowInStore;
+use App\Enums\ItemStatusEnum;
 use App\Traits\PhotoManagementTrait;
 
 class Item extends Model
 {
     use HasFactory;
     use PhotoManagementTrait;
-    
+
     protected $table = 'items';
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $fillable = array('name', 'item_code', 'description', 'price', 'quantity','category_id','unit_id',
-    'is_shown_in_store', 'minimum_stock');
+    'status', 'is_shown_in_store', 'minimum_stock');
 
     public function unit()
     {
@@ -45,5 +47,12 @@ class Item extends Model
     public function returns()
     {
         return $this->morphedByMany('App\Models\SaleReturn', 'itemable');
+    }
+    protected function casts(): array
+    {
+        return [
+            'is_shown_in_store' => ItemShowInStore::class,
+            'status' => ItemStatusEnum::class
+        ];
     }
 }

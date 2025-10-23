@@ -41,7 +41,7 @@
                                     id="description"
                                     class="form-control"
                                     rows="4">{{ old('description',$item->description) }}</textarea>
-                                @error('item_code')
+                                @error('description')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -141,25 +141,35 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="is_shown_in_store">@lang('trans.status')</label>
-                            <div class="form-check">
-                                <input type="radio"
-                                    class="form-check-input @error('is_shown_in_store') is-invalid @enderror"
-                                    id="show"
-                                    name="is_shown_in_store"
-                                    value="1"
-                                    {{ old('is_shown_in_store', $item->is_shown_in_store ?? '') == '1' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="show">@lang('trans.show')</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio"
-                                    class="form-check-input @error('is_shown_in_store') is-invalid @enderror"
-                                    id="hide"
-                                    name="is_shown_in_store"
-                                    value="0"
-                                    {{ old('is_shown_in_store', $item->is_shown_in_store ?? '') == '0' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="hide">@lang('trans.hide')</label>
-                            </div>
+                            <label for="status">@lang('trans.status')</label>
+                            @foreach($itemStatuses as $value => $label)
+                                <div class="form-check">
+                                    <input type="radio"
+                                        class="form-check-input @error('status') is-invalid @enderror"
+                                        id="status.{{ $value }}"
+                                        name="status"
+                                        value="{{ $value }}"
+                                        @if(old('status', $item->status->value) == $value) checked @endif>
+                                    <label class="form-check-label" for="status.{{ $value }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
+                            @error('status')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="is_shown_in_store">@lang('trans.show_in_store')</label>
+                            @foreach($itemShows as $value => $label)
+                                <div class="form-check">
+                                    <input type="radio"
+                                        class="form-check-input @error('is_shown_in_store') is-invalid @enderror"
+                                        id="show.{{ $value }}"
+                                        name="is_shown_in_store"
+                                        value="{{ $value }}"
+                                        @if(old('is_shown_in_store', $item->is_shown_in_store->value) == $value) checked @endif>
+                                    <label class="form-check-label" for="show.{{ $value }}">{{ $label }}</label>
+                                </div>
+                            @endforeach
                             @error('is_shown_in_store')
                                 <div class="invalid-feedback d-block">
                                     {{ $message }}
