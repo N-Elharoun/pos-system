@@ -18,9 +18,9 @@ class CreateSalesTable extends Migration
             $table->decimal('discount_value', 10, 2)->default(0);
             $table->tinyInteger('discount_type');
             $table->decimal('shipping_cost', 10, 2)->default(0);
-            $table->decimal('net_amount', 10, 2)->default(0);
-            $table->decimal('paid_amount', 10, 2)->default(0);
-            $table->decimal('remaining_amount', 10, 2)->default(0);
+            $table->decimal('net_amount', 10, 2);
+            $table->decimal('paid_amount', 10, 2);
+            $table->decimal('remaining_amount', 10, 2);
             $table->string('invoice_number');
             $table->tinyInteger('payment_type');
         });
