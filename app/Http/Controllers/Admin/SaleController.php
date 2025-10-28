@@ -62,11 +62,11 @@ class SaleController extends Controller
             $totalPrice = $selectedItem->price * $item['quantity'];
             $total += $totalPrice;
             $sale->items()->attach([
-                $item[$id] => [
-                'unit_price'  => $selectedItem->price,
-                'quantity'    => $item['quantity'],
-                'total_price' => $totalPrice,
-                'notes' => $item['notes']
+                $id => [
+                    'unit_price'  => $selectedItem->price,
+                    'quantity'    => $item['quantity'],
+                    'total_price' => $totalPrice,
+                    'notes' => $item['notes']
                 ]
             ]);
             $selectedItem->decrement('quantity', $item['quantity']);
@@ -78,7 +78,7 @@ class SaleController extends Controller
         if ($request->discount_type == DiscountTypeEnum::Percentage->value) {
             $discount = $request->discount_value / 100 * $total;
         } else {
-            $discount = $request->discount_value;
+            $discount = $request->discount_value ?? 0;
         }
         return $discount;
     }
