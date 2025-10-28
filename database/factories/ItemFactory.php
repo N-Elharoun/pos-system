@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Category;
 use App\Models\Unit;
+use App\Enums\ItemShowInStoreEnum;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Item>
@@ -25,7 +26,7 @@ class ItemFactory extends Factory
             'price' => fake()->randomFloat(2, 1, 10000),
             'quantity' => fake()->randomFloat(2, 1, 10000),
             'minimum_stock' => fake()->randomFloat(2, 1, 10000),
-            'is_shown_in_store' => fake()->boolean(),
+            'is_shown_in_store' => fake()->randomElement(ItemShowInStoreEnum::class),
             'category_id' => Category::inRandomOrder()->value('id'),
             'unit_id' => Unit::inRandomOrder()->value('id'),
         ];

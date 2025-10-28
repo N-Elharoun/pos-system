@@ -2,22 +2,22 @@
 
 namespace App\Enums;
 
-enum ItemShowInStore: int
+enum ItemShowInStoreEnum: int
 {
     case Show = 1;
     case Hide = 2;
     public function label(): string
     {
         return match ($this) {
-            ItemShowInStore::Show => __('trans.show'),
-            ItemShowInStore::Hide => __('trans.hide'),
+            ItemShowInStoreEnum::Show => __('trans.show'),
+            ItemShowInStoreEnum::Hide => __('trans.hide'),
         };
     }
     public function style()
     {
         return match ($this) {
-            ItemShowInStore::Show => 'success',
-            ItemShowInStore::Hide => 'danger',
+            ItemShowInStoreEnum::Show => 'success',
+            ItemShowInStoreEnum::Hide => 'danger',
         };
     }
     public static function labels()

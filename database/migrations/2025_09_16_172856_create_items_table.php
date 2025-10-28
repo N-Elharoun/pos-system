@@ -21,7 +21,7 @@ class CreateItemsTable extends Migration
             $table->tinyInteger('status')->default(ItemStatusEnum::Active);
             $table->bigInteger('category_id')->unsigned();
             $table->bigInteger('unit_id')->unsigned();
-            $table->boolean('is_shown_in_store');
+            $table->tinyInteger('is_shown_in_store');
             $table->decimal('minimum_stock');
         });
     }

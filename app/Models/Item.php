@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Enums\ItemShowInStore;
+use App\Enums\ItemShowInStoreEnum;
 use App\Enums\ItemStatusEnum;
 use App\Traits\PhotoManagementTrait;
 
@@ -51,7 +51,7 @@ class Item extends Model
     protected function casts(): array
     {
         return [
-            'is_shown_in_store' => ItemShowInStore::class,
+            'is_shown_in_store' => ItemShowInStoreEnum::class,
             'status' => ItemStatusEnum::class
         ];
     }

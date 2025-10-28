@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Admin\ItemRequest;
 use App\Enums\CategoryStatusEnum;
 use App\Enums\UnitStatusEnum;
-use App\Enums\ItemShowInStore;
+use App\Enums\ItemShowInStoreEnum;
 use App\Enums\ItemStatusEnum;
 
 class ItemController extends Controller
@@ -31,7 +31,7 @@ class ItemController extends Controller
     {
         $categories = Category::where('status', CategoryStatusEnum::Active)->get();
         $units = Unit::where('status', UnitStatusEnum::Active)->get();
-        $itemShows = ItemShowInStore::labels();
+        $itemShows = ItemShowInStoreEnum::labels();
         $itemStatuses = ItemStatusEnum::labels();
         return view('admin.items.create', compact('categories', 'units', 'itemShows', 'itemStatuses'));
     }
@@ -63,7 +63,7 @@ class ItemController extends Controller
     {
         $categories = Category::where('status', CategoryStatusEnum::Active)->get();
         $units = Unit::where('status', UnitStatusEnum::Active)->get();
-        $itemShows = ItemShowInStore::labels();
+        $itemShows = ItemShowInStoreEnum::labels();
         $itemStatuses = ItemStatusEnum::labels();
         $item = Item::findOrFail($id);
         return view('admin.items.edit', compact('item', 'categories', 'units', 'itemShows', 'itemStatuses'));

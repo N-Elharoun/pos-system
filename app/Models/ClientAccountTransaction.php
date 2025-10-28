@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class ClientAccountTransaction extends Model
 {
     protected $fillable = [
-        'type',
-        'amount',
+        'credit',
+        'debit',
+        'balance',
         'description',
         'balance_after',
         'client_id',
