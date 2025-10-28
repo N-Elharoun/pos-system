@@ -51,7 +51,7 @@ class SaleController extends Controller
             dd($request->all());
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Failed to create sale: ' . $e->getMessage());
+            dd($e->getMessage(), $e->getTraceAsString());
         }
     }
     private function attachItems(Sale $sale, SaleRequest $request): float
@@ -60,16 +60,16 @@ class SaleController extends Controller
         foreach ($request->items as $id => $item) {
             $selectedItem = Item::find($id);
             $totalPrice = $selectedItem->price * $item['quantity'];
-            $total += $totalPrice;
             $sale->items()->attach([
-                $item[$id] => [
-                'unit_price'  => $selectedItem->price,
-                'quantity'    => $item['quantity'],
-                'total_price' => $totalPrice,
-                'notes' => $item['notes']
+                $id => [
+                    'unit_price'  => $selectedItem->price,
+                    'quantity'    => $item['quantity'],
+                    'total_price' => $totalPrice,
+                    'notes' => $item['notes']
                 ]
             ]);
             $selectedItem->decrement('quantity', $item['quantity']);
+            $total += $totalPrice;
         }
         return $total;
     }
