@@ -42,8 +42,8 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
         $item = Item::create($request->validated());
-        $item->uploadPhoto($request, 'photo', 'items', 'item_photo');
-        $item->uploadGallery($request, 'gallery', 'items/gallery', 'item_gallery');
+        $item->createPhoto($request, 'photo', 'items', 'item_photo');
+        $item->createGallery($request, 'gallery', 'items/gallery', 'item_gallery');
         return to_route('admin.items.index')->with('success', 'Item created successfully.');
     }
 
@@ -76,8 +76,8 @@ class ItemController extends Controller
     {
         $item = Item::findOrFail($id);
         $item->update($request->validated());
-        $item->uploadPhoto($request, 'photo', 'items', 'item_photo');
-        $item->uploadGallery($request, 'gallery', 'items/gallery', 'item_gallery');
+        $item->updatePhoto($request, 'photo', 'items', 'item_photo');
+        $item->updateGallery($request, 'gallery', 'items/gallery', 'item_gallery');
         return to_route('admin.items.index')->with('success', 'Item updated successfully.');
     }
 

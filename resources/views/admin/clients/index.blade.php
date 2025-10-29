@@ -67,5 +67,5 @@
     </div>
 @endsection
 @push('js')
-    <x-delete-button />
+    @include('admin.layouts.partials._delete')
 @endpush

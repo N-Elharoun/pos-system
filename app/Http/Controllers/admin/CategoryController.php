@@ -40,7 +40,7 @@ class CategoryController extends Controller
 
         ]);
         $category = Category::create($data);
-        $category->uploadPhoto($request, 'photo', 'categories', 'category_photo');
+        $category->createPhoto($request, 'photo', 'categories', 'category_photo');
         return to_route('admin.categories.index')->with('success', 'Category added successfully!');
     }
 
@@ -76,7 +76,7 @@ class CategoryController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
-        $category->uploadPhoto($request, 'photo', 'categories', 'category_photo');
+        $category->updatePhoto($request, 'photo', 'categories', 'category_photo');
         $category->update($data);
         return to_route('admin.categories.index')->with('success', 'Category updated successfully!');
     }

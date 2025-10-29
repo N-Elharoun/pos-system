@@ -14,6 +14,7 @@ use App\Models\Unit;
 use App\Enums\DiscountTypeEnum;
 use App\Enums\PaymentTypeEnum;
 use App\Http\Requests\Admin\SaleRequest;
+use App\Services\ClientService;
 use App\Services\SafeService;
 use DB;
 use Auth;
@@ -46,9 +47,10 @@ class SaleController extends Controller
                 $sale->paid_amount,
                 'Sale Payment, Invoice #: ' . $sale->invoice_number
             );
-            $this->processClientAccountTransaction($sale);
+            $clientService = new ClientService();
+            $clientService->recordTransaction($sale);
             DB::commit();
-            dd($request->all());
+            return back();
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Failed to create sale: ' . $e->getMessage());
@@ -98,25 +100,5 @@ class SaleController extends Controller
         $sale->paid_amount = $paid;
         $sale->remaining_amount = $remaining;
         $sale->save();
-    }
-    private function processClientAccountTransaction(Sale $sale): void
-    {
-        $net = $sale->net_amount;
-        $paid = $sale->paid_amount;
-        $balance = $net - $paid;
-
-        if ($balance != 0) {
-            $sale->client->increment('balance', $balance);
-        }
-
-        $sale->clientAccountTransaction()->create([
-            'user_id' => Auth::id(),
-            'client_id' => $sale->client_id,
-            'credit' => $net,
-            'debit' => $paid,
-            'balance' => $balance,
-            'description' => 'Sale Remaining Amount, Invoice #: ' . $sale->invoice_number,
-            'balance_after' => $sale->client->fresh()->balance,
-        ]);
     }
 }

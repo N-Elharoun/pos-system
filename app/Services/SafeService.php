@@ -19,8 +19,12 @@ class SafeService
         $this->performTransaction($reference, $amount, SafeTransactionTypeEnum::Out, $description);
     }
 
-    private function performTransaction(Model $reference, float $amount, SafeTransactionTypeEnum $type, string $description): void
-    {
+    private function performTransaction(
+        Model $reference,
+        float $amount,
+        SafeTransactionTypeEnum $type,
+        string $description
+    ): void {
         if ($amount <= 0) {
             return;
         }
