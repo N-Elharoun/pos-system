@@ -115,6 +115,14 @@ return [
     'select_client' => 'Select Client',
     'select_safe' => 'Select Safe',
     'select_payment_type' => 'Select Payment Type',
+    // stocks
+    'stocks' => 'Stocks',
+    'all_items_are_above_the_minimum_stock_level' => 'All items are above the minimum stock level',
+    'current_stock' => 'Current Stock',
+    'low_stock_items' => 'Low Stock Items',
+    'out_of_stock' => 'Out of Stock',
+    'low_stock' => 'Low Stock',
+    'in_stock' => 'In Stock',
     // Sidebar
     'users' => 'Users',
     'categories' => 'Categories',

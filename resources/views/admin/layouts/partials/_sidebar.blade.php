@@ -121,6 +121,15 @@
               </p>
             </a>
           </li>
+           {{-- stocks--}}
+          <li class="nav-item">
+            <a href={{ route('admin.stocks.low') }} class="nav-link">
+              <i class="nav-icon fas fa-boxes"></i>
+              <p>
+                 @lang('trans.stocks')
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
