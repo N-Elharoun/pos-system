@@ -4,23 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateItemablesTable extends Migration {
+    public function up()
+    {
+        Schema::create('itemables', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->morphs('itemable');
+            $table->unsignedBigInteger('item_id');
+            $table->decimal('quantity');
+            $table->decimal('unit_price',  10, 2)->default(0);
+            $table->decimal('total_price',  10, 2)->default(0);
+            $table->text('notes')->nullable();
+        });
+    }
 
-	public function up()
-	{
-		Schema::create('itemables', function(Blueprint $table) {
-			$table->id();
-			$table->timestamps();
-			$table->morphs('itemable');
-			$table->unsignedBigInteger('item_id');
-			$table->decimal('quantity');
-			$table->decimal('unit_price', 10,2);
-			$table->decimal('total_price', 10,2);
-			$table->text('notes')->nullable();
-		});
-	}
-
-	public function down()
-	{
-		Schema::drop('itemables');
-	}
+    public function down()
+    {
+        Schema::drop('itemables');
+    }
 }

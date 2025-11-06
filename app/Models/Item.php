@@ -17,7 +17,7 @@ class Item extends Model
     protected $table = 'items';
     public $timestamps = true;
     protected $dates = ['deleted_at'];
-    protected $fillable = array('name', 'item_code', 'description', 'price', 'quantity','category_id','unit_id',
+    protected $fillable = array('name', 'item_code', 'description', 'price','category_id','unit_id',
     'status', 'is_shown_in_store', 'minimum_stock');
 
     public function unit()
@@ -41,9 +41,19 @@ class Item extends Model
 
     public function sales()
     {
-        return $this->morphedByMany('App\Models\Sale', 'itemable');
+        return $this->morphedByMany('App\Models\Sale', 'itemable')
+        ->withPivot('unit_price', 'quantity', 'total_price', 'notes')
+        ->withTimestamps();
     }
-
+    public function warehouses()
+    {
+        return $this->morphedByMany('App\Models\Warehouse', 'itemable')
+        ->withPivot('quantity')->withTimestamps();
+    }
+    public function warehouseTransactions()
+    {
+        return $this->hasMany('App\Models\WarehouseTransaction', 'item_id');
+    }
     public function returns()
     {
         return $this->morphedByMany('App\Models\SaleReturn', 'itemable');

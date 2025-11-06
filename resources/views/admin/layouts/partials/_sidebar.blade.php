@@ -87,7 +87,7 @@
           </li>
           {{-- sales --}}
           <li class="nav-item">
-            <a href={{ route('admin.sales.create') }} class="nav-link">
+            <a href={{ route('admin.sales.index') }} class="nav-link">
               <i class="nav-icon fas fa-chart-line"></i>
               <p>
                 @lang('trans.sales')

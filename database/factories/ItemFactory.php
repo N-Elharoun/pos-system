@@ -24,7 +24,7 @@ class ItemFactory extends Factory
             'item_code' => 'Itm' . fake()->numberBetween(111111, 999999),
             'description' => fake()->sentence(),
             'price' => fake()->randomFloat(2, 1, 10000),
-            'quantity' => fake()->randomFloat(2, 1, 10000),
+            // 'quantity' => fake()->randomFloat(2, 1, 10000),
             'minimum_stock' => fake()->randomFloat(2, 1, 10000),
             'is_shown_in_store' => fake()->randomElement(ItemShowInStoreEnum::class),
             'category_id' => Category::inRandomOrder()->value('id'),

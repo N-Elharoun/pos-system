@@ -29,6 +29,7 @@ class SaleRequest extends FormRequest
             'sale_date' => 'required|date',
             'invoice_number' => 'required|unique:sales,invoice_number',
             'safe_id' => 'required|integer|exists:safes,id',
+            'warehouse_id' => 'required|integer|exists:warehouses,id',
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|integer|exists:items,id',
             'items.*.quantity' => 'required|numeric|min:1',
@@ -41,6 +42,7 @@ class SaleRequest extends FormRequest
                 'numeric',
                 'min:0'
             ],
+            'amount' => 'required_if:method,update|numeric|min:1',
         ];
     }
 }

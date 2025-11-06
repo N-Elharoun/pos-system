@@ -6,20 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Enums\ItemStatusEnum;
+use App\Models\Warehouse;
 
 class StockController extends Controller
 {
-    public function lowStock(Request $request)
+    public function lowStock()
     {
-        $minStock = $request->min_stock ;
-        $query = Item::with('category', 'unit')->where('status', ItemStatusEnum::Active);
-        if ($minStock) {
-            $query = $query->where('quantity', '<=', $minStock);
-        } else {
-            $query = $query->whereColumn('quantity', '<=', 'minimum_stock');
-            $minStock = $query->value('minimum_stock');
+        $items = Item::with(['category', 'unit', 'warehouses'])
+            ->where('status', ItemStatusEnum::Active)
+            ->paginate(10);
+        foreach ($items as $item) {
+            $item->total_stock = $item->warehouses->sum('pivot.quantity');
         }
-        $items = $query->paginate(10);
-        return view('admin.stocks.low', compact('items', 'minStock'));
+        return view('admin.stocks.low', compact('items'));
     }
 }

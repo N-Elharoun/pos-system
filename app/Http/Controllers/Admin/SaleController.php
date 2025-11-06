@@ -6,32 +6,48 @@ use App\Models\Sale;
 use App\Enums\ItemStatusEnum;
 use App\Enums\SafeStatusEnum;
 use App\Enums\UnitStatusEnum;
+use App\Enums\WarehouseStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Item;
 use App\Models\Safe;
 use App\Models\Unit;
+use App\Models\Warehouse;
 use App\Enums\DiscountTypeEnum;
 use App\Enums\PaymentTypeEnum;
+use App\Enums\SafeTransactionTypeEnum;
 use App\Http\Requests\Admin\SaleRequest;
+use Illuminate\Http\Request;
 use App\Services\ClientService;
 use App\Services\SafeService;
+use App\Services\StockManageService;
 use DB;
 use Auth;
 
 class SaleController extends Controller
 {
+    public function index()
+    {
+        $sales = Sale::with('client')->paginate(10);
+        return view('admin.sales.index', compact('sales'));
+    }
+    public function show($id)
+    {
+        $sale = Sale::with('items', 'client', 'user', 'safe')->findOrFail($id);
+        return view('admin.sales.show', compact('sale'));
+    }
     public function create()
     {
         $clients = Client::all();
         $safes = Safe::where('status', SafeStatusEnum::Active)->get();
         $units = Unit::where('status', UnitStatusEnum::Active)->get();
         $items = Item::where('status', ItemStatusEnum::Active)->get();
+        $warehouses = Warehouse::where('status', WarehouseStatusEnum::Active)->get();
         $discountTypes = DiscountTypeEnum::labels();
         $paymentTypes = PaymentTypeEnum::labels();
         return view(
             'admin.sales.create',
-            compact('clients', 'safes', 'units', 'items', 'discountTypes', 'paymentTypes')
+            compact('clients', 'safes', 'units', 'items', 'warehouses', 'discountTypes', 'paymentTypes')
         );
     }
     public function store(SaleRequest $request)
@@ -48,13 +64,36 @@ class SaleController extends Controller
                 'Sale Payment, Invoice #: ' . $sale->invoice_number
             );
             $clientService = new ClientService();
-            $clientService->recordTransaction($sale);
+            $clientService->inTransaction($sale);
             DB::commit();
-            return back();
+            return to_route('admin.sales.index')->with('success', 'Sale created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Failed to create sale: ' . $e->getMessage());
         }
+    }
+    public function edit($id)
+    {
+        $sale = Sale::with('client')->findOrFail($id);
+        return view('admin.sales.edit', compact('sale'));
+    }
+    public function update(Request $request, $id)
+    {
+        DB::beginTransaction();
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1',
+        ]);
+        $validatedAmount = $validated['amount'];
+        $sale = Sale::findOrFail($id);
+        $remainingAmount = $sale->remaining_amount - $validatedAmount;
+        $sale->update([
+            'remaining_amount' => $remainingAmount >  0 ? $remainingAmount : 0,
+        ]);
+        (new ClientService())->outTransaction($sale, $validatedAmount);
+        (new SafeService())
+        ->inTransaction($sale, $validatedAmount, 'Sale Paying Remaining Amount, Invoice #: ' . $sale->invoice_number);
+        DB::commit();
+        return to_route('admin.sales.index')->with('success', 'payment updated successfully.');
     }
     private function attachItems(Sale $sale, SaleRequest $request): float
     {
@@ -71,7 +110,8 @@ class SaleController extends Controller
                     'notes' => $item['notes']
                 ]
             ]);
-            $selectedItem->decrement('quantity', $item['quantity']);
+            // $selectedItem->decrement('quantity', $item['quantity']);
+            (new StockManageService())->decreaseStock($selectedItem, $request->warehouse_id, $item['quantity'], $sale);
         }
         return $total;
     }

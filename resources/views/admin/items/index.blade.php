@@ -52,7 +52,11 @@
                                     <td>{{ $item->item_code}}</td>
                                     <td>{{ $item->description }}</td>
                                     <td>{{ $item->price }}</td>
-                                    <td>{{ $item->quantity }}</td>
+                                    @if ($item->warehouses->count())
+                                        <td>{{ $item->warehouses->sum('pivot.quantity') }}</td>
+                                    @else
+                                        <td>0</td>
+                                    @endif
                                     <td>{{ $item->minimum_stock}}</td>
                                     <td>{{ $item->category?->name  ?? 'no category' }}</td>
                                     <td>{{ $item->unit?->name ??  'no unit'}}</td>

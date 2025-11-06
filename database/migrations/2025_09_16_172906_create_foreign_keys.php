@@ -37,6 +37,11 @@ class CreateForeignKeys extends Migration
                         ->onDelete('restrict')
                         ->onUpdate('restrict');
         });
+        Schema::table('sales', function (Blueprint $table) {
+            $table->foreign('warehouse_id')->references('id')->on('warehouses')
+                        ->onDelete('restrict')
+                        ->onUpdate('restrict');
+        });
         Schema::table('safe_transactions', function (Blueprint $table) {
             $table->foreign('safe_id')->references('id')->on('safes')
                         ->onDelete('restrict')
@@ -82,10 +87,18 @@ class CreateForeignKeys extends Migration
                         ->onDelete('restrict')
                         ->onUpdate('restrict');
         });
-
-
         Schema::table('shipping_addresses', function (Blueprint $table) {
             $table->foreign('order_id')->references('id')->on('orders')
+                        ->onDelete('restrict')
+                        ->onUpdate('restrict');
+        });
+        Schema::table('warehouse_transactions', function (Blueprint $table) {
+            $table->foreign('warehouse_id')->references('id')->on('warehouses')
+                        ->onDelete('restrict')
+                        ->onUpdate('restrict');
+        });
+        Schema::table('warehouse_transactions', function (Blueprint $table) {
+            $table->foreign('item_id')->references('id')->on('items')
                         ->onDelete('restrict')
                         ->onUpdate('restrict');
         });

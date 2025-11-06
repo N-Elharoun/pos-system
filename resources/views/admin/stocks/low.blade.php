@@ -10,12 +10,6 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form action="{{ route('admin.stocks.low') }}" method="GET" class="mb-4">
-                        <label for="min_stock" class="form-label">@lang('trans.minimum_stock')</label>
-                        <input type="number" name="min_stock" id="min_stock" value= {{ $minStock }}
-                        min="0" step="0.01" class="form-control d-inline-block w-auto mx-2">
-                        <x-form-submit />
-                    </form>
                     @if($items->isEmpty())
                         <div class="alert alert-success">
                             @lang('trans.all_items_are_above_the_minimum_stock_level').
@@ -38,14 +32,14 @@
                                     <tr>
                                         <td>{{ $item->name }}</td>
                                         <td>{{ $item->item_code }}</td>
-                                        <td>{{ $item->quantity }}</td>
+                                        <td>{{ $item->total_stock }}</td>
                                         <td>{{ $item->minimum_stock }}</td>
                                         <td>{{ $item->category->name }}</td>
                                         <td>{{ $item->unit->name }}</td>
                                         <td>
-                                            @if($item->quantity == 0)
+                                            @if($item->total_stock <= 0)
                                                 <span class="badge bg-danger">@lang('trans.out_of_stock')</span>
-                                            @elseif($item->quantity <= $item->minimum_stock)
+                                            @elseif($item->total_stock <= $item->minimum_stock)
                                                 <span class="badge bg-warning text-dark">@lang('trans.low_stock')</span>
                                             @else
                                                 <span class="badge bg-success">@lang('trans.in_stock')</span>

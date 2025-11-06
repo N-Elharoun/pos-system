@@ -10,31 +10,33 @@ class Sale extends Model
     public $timestamps = true;
     protected $fillable = array(
         'total','discount_value', 'discount_type', 'shipping_cost', 'net_amount', 'paid_amount',
-        'remaining_amount', 'invoice_number', 'payment_type', 'client_id', 'safe_id', 'sale_date');
+        'remaining_amount', 'invoice_number', 'payment_type', 'client_id', 'safe_id', 'sale_date','warehouse_id');
 
     public function safeTransactions()
     {
         return $this->morphMany('App\Models\SafeTransaction', 'reference');
     }
-
     public function client()
     {
         return $this->belongsTo('App\Models\Client');
     }
-
     public function safe()
     {
         return $this->belongsTo('App\Models\Safe');
     }
-
     public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
-
+    public function warehouse()
+    {
+        return $this->belongsTo('App\Models\Warehouse');
+    }
     public function items()
     {
-        return $this->morphToMany('App\Models\Item', 'itemable')->withPivot('unit_price', 'quantity', 'total_price', 'notes');
+        return $this->morphToMany('App\Models\Item', 'itemable')
+        ->withPivot('unit_price', 'quantity', 'total_price', 'notes')
+        ->withTimestamps();
     }
     public function clientAccountTransaction()
     {

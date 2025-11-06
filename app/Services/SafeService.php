@@ -37,9 +37,7 @@ class SafeService
             } else {
                 $safe->balance -= $amount;
             }
-
             $safe->save();
-
             $reference->safeTransactions()->create([
                 'user_id' => Auth::id(),
                 'type' => $type,
