@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\ClientService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Client;
+use App\Models\ClientAccountTransaction;
 use App\Enums\ClientRegistrationEnum;
 use App\Enums\ClientStatusEnum;
 use App\Http\Requests\Admin\ClientRequest;
@@ -35,7 +39,18 @@ class ClientController extends Controller
      */
     public function store(ClientRequest $request)
     {
-        Client::create($request->validated());
+        DB::beginTransaction();
+        $client = Client::create($request->validated());
+        $client->clientAccountTransactions()->create([
+            'user_id'       => Auth::id(),
+            'client_id'     => $client->id,
+            'credit'        => 0,
+            'debit'         => 0,
+            'balance'       => 0,
+            'balance_after' => 0,
+            'description'   => 'Initial Balance',
+        ]);
+        DB::commit();
         return to_route('admin.clients.index')->with('success', 'Client added successfully!');
     }
 
@@ -44,7 +59,9 @@ class ClientController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $transactions = ClientAccountTransaction::with('user')->where('client_id', $id)->get();
+        return view('admin.clients.show', compact('client', 'transactions'));
     }
 
     /**
@@ -66,6 +83,21 @@ class ClientController extends Controller
         $client = Client::findOrFail($id);
         $client->update($request->validated());
         return to_route('admin.clients.index')->with('success', 'Client updated successfully.');
+    }
+    public function balance($id)
+    {
+        $client = Client::findOrFail($id);
+        return view('admin.clients.balance', compact('client'));
+    }
+    public function updateBalance(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:1',
+        ]);
+        $amount = $validated['amount'];
+        $client = Client::findOrFail($id);
+        (new ClientService())->outTransaction($client, $amount);
+        return to_route('admin.clients.index')->with('success', 'Client`s Balance updated successfully.');
     }
 
     /**

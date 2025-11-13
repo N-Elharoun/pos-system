@@ -65,8 +65,13 @@ class ItemController extends Controller
      */
     public function show(string $id)
     {
-        $item = Item::findOrFail($id);
-        return view('admin.items.show', compact('item'));
+        $item = Item::with('warehouses')->findOrFail($id);
+        if ($item->warehouses()->exists()) {
+            $quantity = $item->warehouses()->where('item_id', $item->id)->first()->pivot->quantity;
+        } else {
+            $quantity = 0;
+        }
+        return view('admin.items.show', compact('item', 'quantity'));
     }
 
     /**
@@ -74,12 +79,15 @@ class ItemController extends Controller
      */
     public function edit(string $id)
     {
+        $item = Item::findOrFail($id);
         $categories = Category::where('status', CategoryStatusEnum::Active)->get();
         $units = Unit::where('status', UnitStatusEnum::Active)->get();
         $itemShows = ItemShowInStoreEnum::labels();
         $itemStatuses = ItemStatusEnum::labels();
-        $item = Item::findOrFail($id);
-        return view('admin.items.edit', compact('item', 'categories', 'units', 'itemShows', 'itemStatuses'));
+        return view(
+            'admin.items.edit',
+            compact('item', 'categories', 'units', 'itemShows', 'itemStatuses')
+        );
     }
 
     /**
@@ -87,11 +95,18 @@ class ItemController extends Controller
      */
     public function update(ItemRequest $request, string $id)
     {
-        $item = Item::findOrFail($id);
-        $item->update($request->validated());
-        $item->updatePhoto($request, 'photo', 'items', 'item_photo');
-        $item->updateGallery($request, 'gallery', 'items/gallery', 'item_gallery');
-        return to_route('admin.items.index')->with('success', 'Item updated successfully.');
+        DB::beginTransaction();
+        try {
+            $item = Item::findOrFail($id);
+            $item->update($request->validated());
+            $item->updatePhoto($request, 'photo', 'items', 'item_photo');
+            $item->updateGallery($request, 'gallery', 'items/gallery', 'item_gallery');
+            DB::commit();
+            return to_route('admin.items.index')->with('success', 'Item updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to create item.');
+        }
     }
 
     /**

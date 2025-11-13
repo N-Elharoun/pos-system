@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
             'category' => \App\Models\Category::class,
             'item' => \App\Models\Item::class,
             'warehouse' => \App\Models\Warehouse::class,
+            'client' => \App\Models\Client::class,
             'client_account_transaction' => \App\Models\ClientAccountTransaction::class,
             'safe_transaction' => \App\Models\SafeTransaction::class,
             'warehouse_transaction' => \App\Models\WarehouseTransaction::class,

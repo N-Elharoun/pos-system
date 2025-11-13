@@ -13,6 +13,10 @@ class WarehouseTransaction extends Model
     {
         return $this->belongsTo('App\Models\Warehouse', 'warehouse_id');
     }
+    public function item()
+    {
+        return $this->belongsTo('App\Models\Item', 'item_id');
+    }
     protected $casts = [
         'transaction_type' => \App\Enums\WarehouseTransactionTypeEnum::class,
     ];

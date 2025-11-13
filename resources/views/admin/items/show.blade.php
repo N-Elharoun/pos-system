@@ -33,7 +33,7 @@
                 <hr>
                 <h4>@lang('trans.item_code') : {{ $item->item_code }}</h4>
                 <hr>
-                <h4>@lang('trans.quantity') : {{ $item->quantity }} {{$item->unit->name  }}</h4>
+                <h4>@lang('trans.quantity') : {{ $quantity }} {{$item->unit->name  }}</h4>
                 <div class="bg-gray py-2 px-3 mt-4">
                   <h2 class="mb-0">
                     {{ $item->price }}

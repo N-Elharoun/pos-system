@@ -36,19 +36,18 @@ class ClientService
             ]);
         });
     }
-    public function outTransaction(Model $reference, float $validatedAmount): void
+    public function outTransaction($client, float $validatedAmount): void
     {
-        DB::transaction(function () use ($reference, $validatedAmount) {
-            $balance = $reference->client->balance;
-            $reference->client()->decrement('balance', $validatedAmount);
-            $reference->clientAccountTransaction()->create([
+        DB::transaction(function () use ($client, $validatedAmount) {
+            $client->decrement('balance', $validatedAmount);
+            $client->clientAccountTransactions()->create([
                 'user_id'       => Auth::id(),
-                'client_id'     => $reference->client_id,
+                'client_id'     => $client->id,
                 'credit'        => 0,
                 'debit'         => $validatedAmount,
-                'balance'       => $balance,
-                'description'   => 'Sale Paying Remaining Amount, Invoice #: ' . $reference->invoice_number,
-                'balance_after' => $reference->client->fresh()->balance,
+                'balance'       => -$validatedAmount,
+                'description'   => 'Update Client Balance by admin ',
+                'balance_after' => $client->refresh()->balance,
             ]);
         });
     }

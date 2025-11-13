@@ -10,6 +10,7 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
+                    @include('admin.layouts.partials._flash')
                     <form action="{{ route('admin.items.update',$item->id) }}" method="POST" id="main-form" enctype="multipart/form-data" >
                         @method('PUT')
                         @csrf
@@ -52,16 +53,6 @@
                             <input type="text" class="form-control @error('price') is-invalid @enderror"
                             name="price" id="price" value='{{ old('price',$item->price) }}'>
                             @error('price')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">@lang('trans.quantity')</label>
-                            <input type="text" class="form-control @error('quantity') is-invalid @enderror"
-                            name="quantity" id="quantity" value='{{ old('quantity',$item->quantity) }}'>
-                            @error('quantity')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

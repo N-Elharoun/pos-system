@@ -33,4 +33,22 @@ class StockManageService
             . $warehouseId . ($reference ? ', Reference ID: ' . $reference->id : ''),
         ]);
     }
+    public function adjustStock($item, $warehouseId, $newQuantity, $description = null)
+    {
+        $stockRecord = $item->warehouses()->where('itemable_id', $warehouseId)->firstOrFail();
+        $oldQuantity = $stockRecord->pivot->quantity;
+        $difference = $newQuantity - $oldQuantity;
+        if ($oldQuantity == $newQuantity) {
+            return;
+        }
+        $item->warehouses()->updateExistingPivot($warehouseId, ['quantity' => $newQuantity]);
+        $item->warehouseTransactions()->create([
+            'transaction_type' => WarehouseTransactionTypeEnum::Adjust,
+            'warehouse_id' => $warehouseId,
+            'quantity' => $difference,
+            'quantity_after' => $newQuantity,
+            'description' => $description ?? 'Stock adjusted during inventory. Old: '
+            . $oldQuantity . ', New: ' . $newQuantity,
+        ]);
+    }
 }

@@ -72,29 +72,6 @@ class SaleController extends Controller
             return back()->withInput()->with('error', 'Failed to create sale: ' . $e->getMessage());
         }
     }
-    public function edit($id)
-    {
-        $sale = Sale::with('client')->findOrFail($id);
-        return view('admin.sales.edit', compact('sale'));
-    }
-    public function update(Request $request, $id)
-    {
-        DB::beginTransaction();
-        $validated = $request->validate([
-            'amount' => 'required|numeric|min:1',
-        ]);
-        $validatedAmount = $validated['amount'];
-        $sale = Sale::findOrFail($id);
-        $remainingAmount = $sale->remaining_amount - $validatedAmount;
-        $sale->update([
-            'remaining_amount' => $remainingAmount >  0 ? $remainingAmount : 0,
-        ]);
-        (new ClientService())->outTransaction($sale, $validatedAmount);
-        (new SafeService())
-        ->inTransaction($sale, $validatedAmount, 'Sale Paying Remaining Amount, Invoice #: ' . $sale->invoice_number);
-        DB::commit();
-        return to_route('admin.sales.index')->with('success', 'payment updated successfully.');
-    }
     private function attachItems(Sale $sale, SaleRequest $request): float
     {
         $total = 0;
@@ -129,7 +106,7 @@ class SaleController extends Controller
         $discount = $this->calculateDiscount($request, $total);
         $net = $total - $discount;
         if ($request->payment_type == PaymentTypeEnum::Debt->value) {
-            $paid = $request->payment_amount;
+            $paid = $request->payment_amount > $net ? $net : $request->payment_amount;
         } else {
             $paid = $net;
         }

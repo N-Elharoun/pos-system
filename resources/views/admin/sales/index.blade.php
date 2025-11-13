@@ -41,14 +41,11 @@
                                     <td>{{ $sale->invoice_number }}</td>
                                     <td>{{ $sale->sale_date }}</td>
                                     <td>{{ $sale->client->name }}</td>
-                                    <td>{{ $sale->total }}</td>
+                                    <td>{{ $sale->net_amount }}</td>
                                     <td>{{ $sale->paid_amount }}</td>
                                     <td>{{ $sale->remaining_amount }}</td>
                                     <td>
                                         <a href="{{route('admin.sales.show',$sale->id)}}" class="btn btn-sm btn-info">@lang('trans.view')</a>
-                                        @if ($sale->remaining_amount > 0)
-                                            <a href="{{  route('admin.sales.edit',$sale->id) }}" class="btn btn-sm btn-warning">@lang('trans.pay')</a>
-                                        @endif
                                     </td>
                             </tr>
                             @endforeach

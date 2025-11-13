@@ -40,9 +40,8 @@ class SaleRequest extends FormRequest
             'payment_amount' => [
                 'required_if:payment_type,' . PaymentTypeEnum::Debt->value,
                 'numeric',
-                'min:0'
+                'min:0',
             ],
-            'amount' => 'required_if:method,update|numeric|min:1',
         ];
     }
 }

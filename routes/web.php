@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Admin\StockController;
 
 Route::redirect('/', 'admin/home');
@@ -21,7 +22,15 @@ Route::group(['prefix' => 'admin','as' => 'admin.'], function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('items', ItemController::class);
         Route::resource('clients', ClientController::class);
-        Route::resource('sales', SaleController::class);
+        Route::get('clients/{client}/balance', [ClientController::class,'balance'])->name('clients.balance');
+        Route::put('clients/{client}/balance', [ClientController::class,'updateBalance'])
+        ->name('clients.updateBalance');
+        Route::resource('sales', SaleController::class)->except(['edit', 'update', 'destroy']);
+        Route::resource('warehouses', WarehouseController::class);
+        Route::get('warehouses/{warehouse}/inventory', [WarehouseController::class,'inventory'])
+            ->name('warehouses.inventory');
+        Route::put('warehouses/{warehouse}/inventory', [WarehouseController::class,'updateInventory'])
+            ->name('warehouses.updateInventory');
         Route::get('/stocks/low', [StockController::class,'lowStock'])->name('stocks.low');
     });
 });

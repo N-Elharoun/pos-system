@@ -121,6 +121,15 @@
               </p>
             </a>
           </li>
+          {{-- warehouses--}}
+           <li class="nav-item">
+            <a href={{ route('admin.warehouses.index') }} class="nav-link">
+              <i class="nav-icon fas fa-warehouse"></i>
+              <p>
+                @lang('trans.warehouses')
+              </p>
+            </a>
+          </li>
            {{-- stocks--}}
           <li class="nav-item">
             <a href={{ route('admin.stocks.low') }} class="nav-link">
