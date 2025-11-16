@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Admin\StockController;
+use App\Http\Controllers\Admin\settings\GeneralSettingsController;
+use App\Http\Controllers\Admin\settings\AdvancedSettingsController;
 
 Route::redirect('/', 'admin/home');
 
@@ -32,5 +34,11 @@ Route::group(['prefix' => 'admin','as' => 'admin.'], function () {
         Route::put('warehouses/{warehouse}/inventory', [WarehouseController::class,'updateInventory'])
             ->name('warehouses.updateInventory');
         Route::get('/stocks/low', [StockController::class,'lowStock'])->name('stocks.low');
+        Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
+            Route::get('/general', [GeneralSettingsController::class, 'view'])->name('general.view');
+            Route::put('/general', [GeneralSettingsController::class, 'update'])->name('general.update');
+            Route::get('/advanced', [AdvancedSettingsController::class, 'view'])->name('advanced.view');
+            Route::put('/advanced', [AdvancedSettingsController::class, 'update'])->name('advanced.update');
+        });
     });
 });

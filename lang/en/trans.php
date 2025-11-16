@@ -173,5 +173,17 @@ return [
     'units' => 'Units',
     'clients' => 'Clients',
     'sales' => 'Sales',
-    'create_sale' => 'Create Sale'
+    'create_sale' => 'Create Sale',
+    // Settings
+    'settings' => 'Settings',
+    'general_settings' => 'General Settings',
+    'settings_updated' => 'Settings Updated Successfully',
+    'company_name' => 'Company Name',
+    'company_email' => 'Company Email',
+    'company_phone' => 'Company Phone',
+    'company_logo' => 'Company Logo',
+    'advanced_settings' => 'Advanced Settings',
+    'allow_decimal_quantities' => 'Allow Decimal Quantities',
+    'allow' => 'Allow',
+    'not_allow' => 'Do Not Allow',
 ];

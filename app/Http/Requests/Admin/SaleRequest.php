@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 use App\Enums\DiscountTypeEnum;
 use App\Enums\PaymentTypeEnum;
+use App\Settings\AdvancedSettings;
 
 class SaleRequest extends FormRequest
 {
@@ -24,6 +25,8 @@ class SaleRequest extends FormRequest
      */
     public function rules(): array
     {
+        $settings = app(AdvancedSettings::class);
+
         return [
             'client_id' => 'required|integer|exists:clients,id',
             'sale_date' => 'required|date',
@@ -32,7 +35,9 @@ class SaleRequest extends FormRequest
             'warehouse_id' => 'required|integer|exists:warehouses,id',
             'items' => 'required|array|min:1',
             'items.*.item_id' => 'required|integer|exists:items,id',
-            'items.*.quantity' => 'required|numeric|min:1',
+            'items.*.quantity' => $settings->allow_decimal_quantities
+            ? ['required', 'numeric', 'min:0.01']
+            : ['required', 'integer', 'min:1'],
             'items.*.notes' => 'nullable|string',
             'discount_type' => ['required', new Enum(DiscountTypeEnum::class)],
             'discount_value' => 'nullable|numeric',

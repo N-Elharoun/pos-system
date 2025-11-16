@@ -219,13 +219,11 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label class="form-check-label" >@lang('trans.discount_type')</label>
-                                    @foreach ( $discountTypes as $discountValue => $discountType )
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input" id="{{ $discountValue }}"
-                                        name="discount_type" value='{{ $discountValue }}' @if(old("discount_type",$loop->first) == $discountValue)   checked @endif>
-                                        <label class="form-check-label" for="{{ $discountValue }}">{{ $discountType }}</label>
+                                        <input type="radio" class="form-check-input" id="discount_{{ $settings->discount_type->value }}"
+                                        name="discount_type" value='{{ $settings->discount_type->value }}' @if(old("discount_type") ==  $settings->discount_type->value)   checked @endif>
+                                        <label class="form-check-label" for="discount_{{ $settings->discount_type->value}}">{{  $settings->discount_type->label() }}</label>
                                     </div>
-                                    @endforeach
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
@@ -250,12 +248,12 @@
                             <div class="row">
                                 <div class="col-sm-3">
                                     <label class="form-check-label" >@lang('trans.payment_type')</label>
-                                    @foreach ( $paymentTypes as $paymentValue => $paymentType )
-                                    <div class="form-check">
-                                        <input type="radio" class="form-check-input" id="payment_type{{ $paymentValue }}"
-                                        name="payment_type" value='{{ $paymentValue }}' @if(old("payment_type",$loop->first) == $paymentValue)   checked @endif>
-                                        <label class="form-check-label" for="payment_type{{ $paymentValue }}">{{ $paymentType }}</label>
-                                    </div>
+                                    @foreach ( $settings->payment_type as $type )
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="payment_type{{ $type->value }}"
+                                            name="payment_type" value='{{ $type->value  }}' @if(old("payment_type") == $type->value)   checked @endif>
+                                            <label class="form-check-label" for="payment_type{{ $type->value }}">{{ $type->label() }}</label>
+                                        </div>
                                     @endforeach
                                 </div>
                                 <div class="col-sm-3">
@@ -317,15 +315,25 @@
                 })
                 return;
             }
-            // if (!itemQty || itemQty <= 0 || itemQty > selectedItem.data('quantity')) {
-            //     // sweelalet error
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Error',
-            //         text: 'Please enter a valid quantity',
-            //     })
-            //     return;
-            // }
+            // add the input validation for decimal quantities setting
+            if (!itemQty || itemQty <= 0) {
+                // sweelalet error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Please enter a valid quantity',
+                })
+                return;
+            }
+            else if ((!{{ $settings->allow_decimal_quantities  ? 'true' : 'false' }} && !Number.isInteger(parseFloat(itemQty))) ) {
+                // sweelalet error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Decimal quantities are not allowed',
+                })
+                return;
+            }      
            $("#items_list").append(`
                 <tr>
                     <td>${counter}</td>
@@ -390,7 +398,7 @@
                     $("#discount-value").val(100);
                 }
                 discountAmount = Math.round(((discountValue / 100) * total)* 100) / 100;
-            } else if (discountType ==='{{ App\Enums\DiscountTypeEnum::Fixed->value}}') {
+            } else if (discountType === '{{ App\Enums\DiscountTypeEnum::Fixed->value }}') {
                 discountAmount = discountValue;
                 if (discountAmount > total) discountAmount = total;
             }
@@ -425,11 +433,11 @@
             let paid = parseFloat($("#payment-amount").val()) || 0;
 
             //  Handle payment type
-            if (paymentType == '{{ App\Enums\paymentTypeEnum::Cash->value}}') {
+            if (paymentType == '{{ App\Enums\PaymentTypeEnum::Cash->value }}') {
                 // For cash: pay full amount and lock input
                 paid = net;
                 $("#payment-amount").val(0).prop('readonly', true);
-            } else if (paymentType == '{{ App\Enums\paymentTypeEnum::Debt->value}}') {
+            } else if (paymentType == '{{ App\Enums\PaymentTypeEnum::Debt->value }}') {
                 // For debt: allow partial payment
                 $("#payment-amount").prop('readonly', false);
                 if (paid > net) paid = net; // Prevent overpayment

@@ -86,13 +86,28 @@
             </a>
           </li>
           {{-- sales --}}
-          <li class="nav-item">
-            <a href={{ route('admin.sales.index') }} class="nav-link">
+           <li class="nav-item @if(request()->is('admin/sales/*')) menu-open @endif">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-chart-line"></i>
               <p>
-                @lang('trans.sales')
+                  @lang('trans.sales')
+                  <i class="right fas fa-angle-left"></i>
               </p>
             </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="{{ route('admin.sales.create') }}" class="nav-link @if(request()->routeIs('admin.sales.create')) active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>@lang('trans.create_sale')</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.sales.index') }}" class="nav-link @if(request()->routeIs('admin.sales.index')) active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>@lang('trans.sales')</p>
+                  </a>
+              </li>
+            </ul>
           </li>
           {{-- categories--}}
           <li class="nav-item">
@@ -138,6 +153,30 @@
                  @lang('trans.stocks')
               </p>
             </a>
+          </li>
+          {{-- settings --}}
+          <li class="nav-item @if(request()->is('admin/setttings/*')) menu-open @endif">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-cogs"></i>
+              <p>
+                  @lang('trans.settings')
+                  <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="{{ route('admin.settings.general.view') }}" class="nav-link @if(request()->routeIs('admin.settings.general.view')) active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>@lang('trans.general_settings')</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.settings.advanced.view') }}" class="nav-link @if(request()->routeIs('admin.settings.advanced.view')) active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>@lang('trans.advanced_settings')</p>
+                  </a>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>

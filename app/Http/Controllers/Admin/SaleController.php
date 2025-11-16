@@ -15,13 +15,12 @@ use App\Models\Unit;
 use App\Models\Warehouse;
 use App\Enums\DiscountTypeEnum;
 use App\Enums\PaymentTypeEnum;
-use App\Enums\SafeTransactionTypeEnum;
 use App\Http\Requests\Admin\SaleRequest;
-use Illuminate\Http\Request;
 use App\Services\ClientService;
 use App\Services\SafeService;
 use App\Services\StockManageService;
 use DB;
+use App\Settings\AdvancedSettings;
 use Auth;
 
 class SaleController extends Controller
@@ -43,11 +42,10 @@ class SaleController extends Controller
         $units = Unit::where('status', UnitStatusEnum::Active)->get();
         $items = Item::where('status', ItemStatusEnum::Active)->get();
         $warehouses = Warehouse::where('status', WarehouseStatusEnum::Active)->get();
-        $discountTypes = DiscountTypeEnum::labels();
-        $paymentTypes = PaymentTypeEnum::labels();
+        $settings = new AdvancedSettings();
         return view(
             'admin.sales.create',
-            compact('clients', 'safes', 'units', 'items', 'warehouses', 'discountTypes', 'paymentTypes')
+            compact('clients', 'safes', 'units', 'items', 'warehouses', 'settings')
         );
     }
     public function store(SaleRequest $request)
