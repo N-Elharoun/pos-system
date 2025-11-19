@@ -25,6 +25,11 @@ use Auth;
 
 class SaleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_sale')->only('index', 'show');
+        $this->middleware('permission:create_sale')->only('create', 'store');
+    }
     public function index()
     {
         $sales = Sale::with('client')->paginate(10);

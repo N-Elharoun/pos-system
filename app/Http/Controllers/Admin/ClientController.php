@@ -15,6 +15,13 @@ use App\Http\Requests\Admin\ClientRequest;
 
 class ClientController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_client')->only('index', 'show');
+        $this->middleware('permission:create_client')->only('create', 'store');
+        $this->middleware('permission:update_client')->only('edit', 'update');
+        $this->middleware('permission:delete_client')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

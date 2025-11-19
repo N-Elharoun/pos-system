@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         ClientsSeeder::class,
         SafesSeeder::class,
         WarehousesSeeder::class,
+        RolePermissionsSeeder::class,
         ]);
     }
 }

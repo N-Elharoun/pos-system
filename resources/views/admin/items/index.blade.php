@@ -8,9 +8,11 @@
                 <div class="card-header">
                     <h3 class="card-title">@lang('trans.items_list')</h3>
                     <div class="card-tools">
+                        @can('create_item')
                         <a href="{{ route('admin.items.create') }}" class="btn btn-primary btn-sm">
                             <i class="fas fa-plus"></i> @lang('trans.create')
                         </a>
+                        @endcan
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -72,13 +74,17 @@
                                     </td>
                                     <td>
                                         <a href="{{route('admin.items.show',$item->id)}}" class="btn btn-sm btn-info">@lang('trans.view')</a>
+                                        @can('update_item')
                                         <a href="{{  route('admin.items.edit',$item->id) }}" class="btn btn-sm btn-info">@lang('trans.edit')</a>
-                                            <a href="#"
-                                                data-url="{{ route('admin.items.destroy', $item->id) }}"
-                                                data-id="{{$item->id}}"
-                                                class="btn btn-danger btn-sm delete-button">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
+                                        @endcan
+                                        @can('delete_item')
+                                        <a href="#"
+                                            data-url="{{ route('admin.items.destroy', $item->id) }}"
+                                            data-id="{{$item->id}}"
+                                            class="btn btn-danger btn-sm delete-button">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

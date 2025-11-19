@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
 
         Relation::enforceMorphMap([
             'sale' => 'App\Models\Sale',
+            'user' => 'App\Models\User',
             'sale_return' => \App\Models\SaleReturn::class,
             'category' => \App\Models\Category::class,
             'item' => \App\Models\Item::class,

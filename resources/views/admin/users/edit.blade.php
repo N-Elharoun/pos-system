@@ -75,6 +75,19 @@
                                 </div>
                             @endforeach
                         </div>
+                        <div class="form-group">
+                            <label for="role">@lang('trans.assign_role')</label>
+                            <select name="role" id="role" class="form-control">
+                                <option value="">-- @lang('trans.choose_role') --</option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->name }}"
+                                        {{ $user->roles->contains('name', $role->name) ? 'selected' : '' }}>
+                                        {{ $role->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                     </form>
                 </div>
                 <!-- /.card-body -->

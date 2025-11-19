@@ -20,9 +20,10 @@
                         <thead>
                             <tr>
                                 <th style="width: 10px">#</th>
-                                <th style="width: 250px">@lang('trans.username')</th>
-                                <th style="width: 350px">@lang('trans.email')</th>
-                                <th style="width: 250px">@lang('trans.full_name')</th>
+                                <th>@lang('trans.username')</th>
+                                <th>@lang('trans.email')</th>
+                                <th>@lang('trans.full_name')</th>
+                                <th>@lang('trans.role')</th>
                                 <th>@lang('trans.status')</th>
                                 <th>@lang('trans.action')</th>
                             </tr>
@@ -34,6 +35,13 @@
                                     <td>{{ $user->username }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->full_name }}</td>
+                                    @if($user->roles->count())
+                                        @foreach($user->roles as $role)
+                                            <td>{{ $role->name }}</td>
+                                        @endforeach
+                                    @else
+                                        <td>No role</td>
+                                    @endif
                                     <td>
                                         <span class="badge bg-{{ $user->status->style() }}">{{ $user->status->label() }}</span>
                                     </td>

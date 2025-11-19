@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_category')->only('index', 'show');
+        $this->middleware('permission:create_category')->only('create', 'store');
+        $this->middleware('permission:update_category')->only('edit', 'update');
+        $this->middleware('permission:delete_category')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

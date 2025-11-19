@@ -19,6 +19,13 @@ use DB;
 
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_item')->only('index', 'show');
+        $this->middleware('permission:create_item')->only('create', 'store');
+        $this->middleware('permission:update_item')->only('edit', 'update');
+        $this->middleware('permission:delete_item')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

@@ -68,6 +68,7 @@
             </ul>
           </li> -->
           {{-- users --}}
+          @can('view_user')
           <li class="nav-item">
             <a href={{ route('admin.users.index') }} class="nav-link">
               <i class="nav-icon fas fa-user"></i>
@@ -76,7 +77,9 @@
               </p>
             </a>
           </li>
+          @endcan
           {{-- clients --}}
+          @can('view_client')
           <li class="nav-item">
             <a href={{ route('admin.clients.index') }} class="nav-link">
               <i class="nav-icon fas fa-users"></i>
@@ -85,8 +88,10 @@
               </p>
             </a>
           </li>
+          @endcan
           {{-- sales --}}
-           <li class="nav-item @if(request()->is('admin/sales/*')) menu-open @endif">
+          @can('view_sale')
+          <li class="nav-item @if(request()->is('admin/sales/*')) menu-open @endif">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-chart-line"></i>
               <p>
@@ -109,7 +114,9 @@
               </li>
             </ul>
           </li>
+          @endcan
           {{-- categories--}}
+          @can('view_category')
           <li class="nav-item">
             <a href={{ route('admin.categories.index') }} class="nav-link">
               <i class="nav-icon fas fa-list"></i>
@@ -118,7 +125,9 @@
               </p>
             </a>
           </li>
+          @endcan
           {{-- items --}}
+          @can('view_item')
           <li class="nav-item">
             <a href={{ route('admin.items.index') }} class="nav-link">
               <i class="nav-icon fas fa-tags"></i>
@@ -127,7 +136,9 @@
               </p>
             </a>
           </li>
+          @endcan
           {{-- units--}}
+          @can('view_unit')
           <li class="nav-item">
             <a href={{ route('admin.units.index') }} class="nav-link">
               <i class="nav-icon fas fa-box"></i>
@@ -136,8 +147,10 @@
               </p>
             </a>
           </li>
+          @endcan
           {{-- warehouses--}}
-           <li class="nav-item">
+          @can('view_warehouse')
+          <li class="nav-item">
             <a href={{ route('admin.warehouses.index') }} class="nav-link">
               <i class="nav-icon fas fa-warehouse"></i>
               <p>
@@ -145,7 +158,9 @@
               </p>
             </a>
           </li>
-           {{-- stocks--}}
+          @endcan
+          {{-- stocks--}}
+          @can('low_stock')
           <li class="nav-item">
             <a href={{ route('admin.stocks.low') }} class="nav-link">
               <i class="nav-icon fas fa-boxes"></i>
@@ -154,7 +169,20 @@
               </p>
             </a>
           </li>
+          @endcan
+          {{-- roles--}}
+          @can('view_role')
+          <li class="nav-item">
+            <a href={{ route('admin.roles.index') }} class="nav-link">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>
+                 @lang('trans.roles')
+              </p>
+            </a>
+          </li>
+          @endcan
           {{-- settings --}}
+          @can('view_settings')
           <li class="nav-item @if(request()->is('admin/setttings/*')) menu-open @endif">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-cogs"></i>
@@ -178,6 +206,7 @@
               </li>
             </ul>
           </li>
+          @endcan
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

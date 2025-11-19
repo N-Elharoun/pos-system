@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\DB;
 
 class WarehouseController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_warehouse')->only('index', 'show');
+        $this->middleware('permission:create_warehouse')->only('create', 'store');
+        $this->middleware('permission:update_warehouse')->only('edit', 'update');
+        $this->middleware('permission:delete_warehouse')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */

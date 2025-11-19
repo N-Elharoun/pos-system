@@ -186,4 +186,14 @@ return [
     'allow_decimal_quantities' => 'Allow Decimal Quantities',
     'allow' => 'Allow',
     'not_allow' => 'Do Not Allow',
+    // Roles and Permissions
+    'roles' => 'Roles',
+    'permissions' => 'Permissions',
+    'no_permissions' => 'No Permissions Found',
+    'roles_list' => 'Roles List',
+    'add_role' => 'Add Role',
+    'edit_role' => 'Edit Role',
+    'assign_role' => 'Assign Role',
+    'choose_role' => 'Choose Role',
+    'role' => 'Role',
 ];

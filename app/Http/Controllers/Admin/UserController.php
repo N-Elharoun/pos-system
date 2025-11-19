@@ -7,15 +7,23 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Enums\UserStatusEnum;
 use App\Http\Requests\Admin\UserRequest;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_user')->only('index', 'show');
+        $this->middleware('permission:create_user')->only('create', 'store');
+        // $this->middleware('permission:update_user')->only('edit', 'update');
+        $this->middleware('permission:delete_user')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::paginate(10);
+        $users = User::with('roles')->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
@@ -25,7 +33,8 @@ class UserController extends Controller
     public function create()
     {
         $userstatuses = UserStatusEnum::labels();
-        return view('admin.users.create', compact('userstatuses'));
+        $roles = Role::all();
+        return view('admin.users.create', compact('userstatuses', 'roles'));
     }
 
     /**
@@ -33,7 +42,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        User::create($request->validated());
+        $user = User::create($request->validated());
+        $user->assignRole($request->role);
         return to_route('admin.users.index')->with('success', 'user added successfully!');
     }
 
@@ -53,7 +63,8 @@ class UserController extends Controller
     {
         $userstatuses = UserStatusEnum::labels();
         $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('user', 'userstatuses'));
+        $roles = Role::all();
+        return view('admin.users.edit', compact('user', 'userstatuses', 'roles'));
     }
 
     /**
@@ -66,6 +77,7 @@ class UserController extends Controller
             unset($data['password']);
         }
         $user = User::findOrFail($id);
+        $user->syncRoles($request->roles);
         $user->update($data);
         return to_route('admin.users.index')->with('success', 'User updated successfully !');
     }
@@ -76,6 +88,7 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         $user = User::findOrFail($id);
+        $user->roles()->detach();
         $user->delete();
         return response()->json([
             'status' => 'success',

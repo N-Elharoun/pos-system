@@ -9,6 +9,13 @@ use App\Enums\UnitStatusEnum;
 
 class UnitController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view_unit')->only('index', 'show');
+        $this->middleware('permission:create_unit')->only('create', 'store');
+        $this->middleware('permission:update_unit')->only('edit', 'update');
+        $this->middleware('permission:delete_unit')->only('destroy');
+    }
     /**
      * Display a listing of the resource.
      */
