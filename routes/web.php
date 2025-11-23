@@ -31,6 +31,8 @@ Route::group(['prefix' => 'admin','as' => 'admin.'], function () {
             ->name('clients.updateBalance');
         });
         Route::resource('sales', SaleController::class)->except(['edit', 'update', 'destroy']);
+        Route::get('/sales/{sale}/invoice', [SaleController::class, 'printInvoice'])
+            ->name('sales.invoice');
         Route::resource('warehouses', WarehouseController::class);
         Route::group(['middleware' => ['permission:view_inventory'], 'prefix' => 'warehouses'], function () {
             Route::get('/{warehouse}/inventory', [WarehouseController::class,'inventory'])

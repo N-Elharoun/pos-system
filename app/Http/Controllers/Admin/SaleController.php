@@ -21,6 +21,8 @@ use App\Services\SafeService;
 use App\Services\StockManageService;
 use DB;
 use App\Settings\AdvancedSettings;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Settings\GeneralSettings;
 use Auth;
 
 class SaleController extends Controller
@@ -69,12 +71,25 @@ class SaleController extends Controller
             $clientService = new ClientService();
             $clientService->inTransaction($sale);
             DB::commit();
-            return to_route('admin.sales.index')->with('success', 'Sale created successfully.');
+            return to_route('admin.sales.invoice', $sale->id);
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withInput()->with('error', 'Failed to create sale: ' . $e->getMessage());
         }
     }
+    public function printInvoice(Sale $sale)
+    {
+        $company = new GeneralSettings();
+
+        // Generate PDF HTML
+        $html = view('admin.sales.invoice', compact('sale', 'company'))->render();
+
+        // Clear old form inputs so Create page is empty
+        session()->forget('_old_input');
+
+        return response($html);
+    }
+
     private function attachItems(Sale $sale, SaleRequest $request): float
     {
         $total = 0;
