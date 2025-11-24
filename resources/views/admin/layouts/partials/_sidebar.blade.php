@@ -183,6 +183,17 @@
             </a>
           </li>
           @endcan
+           {{-- safes--}}
+          @can('view_safe')
+          <li class="nav-item">
+            <a href={{ route('admin.safes.index') }} class="nav-link">
+              <i class="nav-icon fas fa-warehouse"></i>
+              <p>
+                @lang('trans.safes')
+              </p>
+            </a>
+          </li>
+          @endcan
           {{-- stocks--}}
           @can('low_stock')
           <li class="nav-item">

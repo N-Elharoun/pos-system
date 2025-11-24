@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\SafeTransactionTypeEnum;
 
 class SafeTransaction extends Model
 {
@@ -24,4 +25,7 @@ class SafeTransaction extends Model
     {
         return $this->morphTo();
     }
+    protected $casts = [
+        'type' => SafeTransactionTypeEnum::class
+    ];
 }

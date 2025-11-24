@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\WarehouseController;
+use App\Http\Controllers\Admin\SafeController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\settings\GeneralSettingsController;
 use App\Http\Controllers\Admin\settings\AdvancedSettingsController;
@@ -44,6 +45,7 @@ Route::group(['prefix' => 'admin','as' => 'admin.'], function () {
             Route::put('/{warehouse}/inventory', [WarehouseController::class,'updateInventory'])
                 ->name('warehouses.updateInventory');
         });
+        Route::resource('safes', SafeController::class);
         Route::group(['middleware' => ['permission:low_stock']], function () {
             Route::get('/stocks/low', [StockController::class,'lowStock'])->name('stocks.low');
         });
