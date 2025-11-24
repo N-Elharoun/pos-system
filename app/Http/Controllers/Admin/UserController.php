@@ -11,13 +11,13 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:view_user')->only('index', 'show');
-        $this->middleware('permission:create_user')->only('create', 'store');
-        // $this->middleware('permission:update_user')->only('edit', 'update');
-        $this->middleware('permission:delete_user')->only('destroy');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('permission:view_user')->only('index', 'show');
+    //     $this->middleware('permission:create_user')->only('create', 'store');
+    //     // $this->middleware('permission:update_user')->only('edit', 'update');
+    //     $this->middleware('permission:delete_user')->only('destroy');
+    // }
     /**
      * Display a listing of the resource.
      */
@@ -77,7 +77,7 @@ class UserController extends Controller
             unset($data['password']);
         }
         $user = User::findOrFail($id);
-        $user->syncRoles($request->roles);
+        $user->syncRoles($data['role']);
         $user->update($data);
         return to_route('admin.users.index')->with('success', 'User updated successfully !');
     }

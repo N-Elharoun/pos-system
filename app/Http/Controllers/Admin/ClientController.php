@@ -103,7 +103,7 @@ class ClientController extends Controller
         ]);
         $amount = $validated['amount'];
         $client = Client::findOrFail($id);
-        (new ClientService())->outTransaction($client, $amount);
+        (new ClientService())->adminOutTransaction($client, $amount);
         return to_route('admin.clients.index')->with('success', 'Client`s Balance updated successfully.');
     }
 

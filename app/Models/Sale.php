@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\SaleTypeEnum;
 
 class Sale extends Model
 {
@@ -10,7 +11,7 @@ class Sale extends Model
     public $timestamps = true;
     protected $fillable = array(
         'total','discount_value', 'discount_type', 'shipping_cost', 'net_amount', 'paid_amount',
-        'remaining_amount', 'invoice_number', 'payment_type', 'client_id', 'safe_id', 'sale_date','warehouse_id');
+        'remaining_amount', 'invoice_number', 'type','payment_type', 'client_id', 'safe_id', 'sale_date','warehouse_id');
 
     public function safeTransactions()
     {
@@ -42,4 +43,7 @@ class Sale extends Model
     {
         return $this->morphMany('App\Models\ClientAccountTransaction', 'reference');
     }
+    protected $casts = [
+        'type' => SaleTypeEnum::class
+    ];
 }

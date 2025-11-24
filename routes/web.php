@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\ReturnController;
 use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\settings\GeneralSettingsController;
@@ -33,6 +34,9 @@ Route::group(['prefix' => 'admin','as' => 'admin.'], function () {
         Route::resource('sales', SaleController::class)->except(['edit', 'update', 'destroy']);
         Route::get('/sales/{sale}/invoice', [SaleController::class, 'printInvoice'])
             ->name('sales.invoice');
+        Route::resource('returns', ReturnController::class)->except(['edit', 'update', 'destroy']);
+         Route::get('/returns/{return}/invoice', [ReturnController::class, 'printInvoice'])
+            ->name('returns.invoice');
         Route::resource('warehouses', WarehouseController::class);
         Route::group(['middleware' => ['permission:view_inventory'], 'prefix' => 'warehouses'], function () {
             Route::get('/{warehouse}/inventory', [WarehouseController::class,'inventory'])

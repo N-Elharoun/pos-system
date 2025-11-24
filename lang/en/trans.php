@@ -159,6 +159,18 @@ return [
     'no_sales_found' => 'No Sales Found',
     'user' => 'User',
     'pay' => 'Pay',
+    'sale' => 'Sale',
+    // Return
+    'return' => 'Return',
+    'returns' => 'Returns',
+    'returns_list' => 'Returns List',
+    'create_return' => 'Create Return',
+    'return_details' => 'Return Details',
+    'return_show' => 'Return Show',
+    'return_create' => 'Return Create',
+    'return_number' => 'Return Number',
+    'return_date' => 'Return Date',
+    'no_returns_found' => 'No Returns Found',
     // stocks
     'stocks' => 'Stocks',
     'all_items_are_above_the_minimum_stock_level' => 'All items are above the minimum stock level',

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Sale;
 use App\Enums\SaleTypeEnum;
 use App\Enums\ItemStatusEnum;
 use App\Enums\SafeStatusEnum;
 use App\Enums\UnitStatusEnum;
 use App\Enums\WarehouseStatusEnum;
-use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Item;
 use App\Models\Safe;
@@ -22,26 +23,25 @@ use App\Services\SafeService;
 use App\Services\StockManageService;
 use DB;
 use App\Settings\AdvancedSettings;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Settings\GeneralSettings;
 use Auth;
 
-class SaleController extends Controller
+class ReturnController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:view_sale')->only('index', 'show');
-        $this->middleware('permission:create_sale')->only('create', 'store');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('permission:view_return')->only('index', 'show');
+    //     $this->middleware('permission:create_return')->only('create', 'store');
+    // }
     public function index()
     {
-        $sales = Sale::with('client')->where('type', SaleTypeEnum::Sale)->paginate(10);
-        return view('admin.sales.index', compact('sales'));
+        $returns = Sale::with('client')->where('type', SaleTypeEnum::Return)->paginate(10);
+        return view('admin.returns.index', compact('returns'));
     }
     public function show($id)
     {
-        $sale = Sale::with('items', 'client', 'user', 'safe')->findOrFail($id);
-        return view('admin.sales.show', compact('sale'));
+        $return = Sale::with('items', 'client', 'user', 'safe')->where('type', SaleTypeEnum::Return)->findOrFail($id);
+        return view('admin.returns.show', compact('return'));
     }
     public function create()
     {
@@ -52,7 +52,7 @@ class SaleController extends Controller
         $warehouses = Warehouse::where('status', WarehouseStatusEnum::Active)->get();
         $settings = new AdvancedSettings();
         return view(
-            'admin.sales.create',
+            'admin.returns.create',
             compact('clients', 'safes', 'units', 'items', 'warehouses', 'settings')
         );
     }
@@ -61,31 +61,31 @@ class SaleController extends Controller
         DB::beginTransaction();
         try {
             $data = $request->validated();
-            $data['type'] = SaleTypeEnum::Sale->value;
-            $sale = auth()->user()->sales()->create($data);
-            $total = $this->attachItems($sale, $request);
-            $this->updateSale($sale, $total, $request);
+            $data['type'] = SaleTypeEnum::Return->value ;
+            $return = auth()->user()->sales()->create($data);
+            $total = $this->attachItems($return, $request);
+            $this->updateSale($return, $total, $request);
             $safeService = new SafeService();
-            $safeService->inTransaction(
-                $sale,
-                $sale->paid_amount,
-                'Sale Payment, Invoice #: ' . $sale->invoice_number
+            $safeService->outTransaction(
+                $return,
+                $return->paid_amount,
+                'Return Payment, Invoice #: ' . $return->invoice_number
             );
             $clientService = new ClientService();
-            $clientService->inTransaction($sale);
+            $clientService->outerTransaction($return);
             DB::commit();
-            return to_route('admin.sales.invoice', $sale->id);
+            return to_route('admin.returns.invoice', $return->id);
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withInput()->with('error', 'Failed to create sale: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Failed to create return: ' . $e->getMessage());
         }
     }
-    public function printInvoice(Sale $sale)
+    public function printInvoice(Sale $return)
     {
         $company = new GeneralSettings();
 
         // Generate PDF HTML
-        $html = view('admin.sales.invoice', compact('sale', 'company'))->render();
+        $html = view('admin.returns.invoice', compact('return', 'company'))->render();
 
         // Clear old form inputs so Create page is empty
         session()->forget('_old_input');
@@ -93,14 +93,14 @@ class SaleController extends Controller
         return response($html);
     }
 
-    private function attachItems(Sale $sale, SaleRequest $request): float
+    private function attachItems(Sale $return, SaleRequest $request): float
     {
         $total = 0;
         foreach ($request->items as $id => $item) {
             $selectedItem = Item::find($id);
             $totalPrice = $selectedItem->price * $item['quantity'];
             $total += $totalPrice;
-            $sale->items()->attach([
+            $return->items()->attach([
                 $id => [
                     'unit_price'  => $selectedItem->price,
                     'quantity'    => $item['quantity'],
@@ -108,7 +108,9 @@ class SaleController extends Controller
                     'notes' => $item['notes']
                 ]
             ]);
-            (new StockManageService())->decreaseStock($selectedItem, $request->warehouse_id, $item['quantity'], $sale);
+            // $selectedItem->decrement('quantity', $item['quantity']);
+            (new StockManageService())
+            ->increaseStock($selectedItem, $request->warehouse_id, $item['quantity'], $return);
         }
         return $total;
     }
@@ -121,7 +123,7 @@ class SaleController extends Controller
         }
         return $discount;
     }
-    private function updateSale(Sale $sale, $total, SaleRequest $request)
+    private function updateSale(Sale $return, $total, SaleRequest $request)
     {
         $discount = $this->calculateDiscount($request, $total);
         $net = $total - $discount;
@@ -131,11 +133,11 @@ class SaleController extends Controller
             $paid = $net;
         }
         $remaining = $net - $paid;
-        $sale->total = $total;
-        $sale->discount_value = $discount;
-        $sale->net_amount = $net;
-        $sale->paid_amount = $paid;
-        $sale->remaining_amount = $remaining;
-        $sale->save();
+        $return->total = $total;
+        $return->discount_value = $discount;
+        $return->net_amount = $net;
+        $return->paid_amount = $paid;
+        $return->remaining_amount = $remaining;
+        $return->save();
     }
 }

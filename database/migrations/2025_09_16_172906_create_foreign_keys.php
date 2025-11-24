@@ -62,21 +62,6 @@ class CreateForeignKeys extends Migration
                         ->onDelete('restrict')
                         ->onUpdate('restrict');
         });
-        Schema::table('returns', function (Blueprint $table) {
-            $table->foreign('sale_id')->references('id')->on('sales')
-                        ->onDelete('restrict')
-                        ->onUpdate('restrict');
-        });
-        Schema::table('returns', function (Blueprint $table) {
-            $table->foreign('safe_id')->references('id')->on('safes')
-                        ->onDelete('restrict')
-                        ->onUpdate('restrict');
-        });
-        Schema::table('returns', function (Blueprint $table) {
-            $table->foreign('user_Id')->references('id')->on('users')
-                        ->onDelete('restrict')
-                        ->onUpdate('restrict');
-        });
         Schema::table('orders', function (Blueprint $table) {
             $table->foreign('client_id')->references('id')->on('clients')
                         ->onDelete('restrict')
@@ -135,15 +120,6 @@ class CreateForeignKeys extends Migration
         });
         Schema::table('client_account_transactions', function (Blueprint $table) {
             $table->dropForeign('client_account_transactions_user_id_foreign');
-        });
-        Schema::table('returns', function (Blueprint $table) {
-            $table->dropForeign('returns_sale_id_foreign');
-        });
-        Schema::table('returns', function (Blueprint $table) {
-            $table->dropForeign('returns_safe_id_foreign');
-        });
-        Schema::table('returns', function (Blueprint $table) {
-            $table->dropForeign('returns_user_Id_foreign');
         });
         Schema::table('orders', function (Blueprint $table) {
             $table->dropForeign('orders_client_id_foreign');

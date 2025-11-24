@@ -115,6 +115,30 @@
             </ul>
           </li>
           @endcan
+            {{-- returns --}}
+          <li class="nav-item @if(request()->is('admin/returns/*')) menu-open @endif">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-exchange-alt"></i>
+              <p>
+                  @lang('trans.returns')
+                  <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                  <a href="{{ route('admin.returns.create') }}" class="nav-link @if(request()->routeIs('admin.returns.create')) active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>@lang('trans.create_return')</p>
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a href="{{ route('admin.returns.index') }}" class="nav-link @if(request()->routeIs('admin.returns.index')) active @endif">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>@lang('trans.returns')</p>
+                  </a>
+              </li>
+            </ul>
+          </li>
           {{-- categories--}}
           @can('view_category')
           <li class="nav-item">

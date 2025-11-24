@@ -1,5 +1,5 @@
 @extends('admin.layouts.app', [
-    'pageName' => __('trans.sales'),
+    'pageName' => __('trans.returns'),
 ])
 
 @section('content')
@@ -7,11 +7,11 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title">@lang('trans.sales_create')</h3>
+                    <h3 class="card-title">@lang('trans.return_create')</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.sales.store') }}" id="main-form">
+                    <form method="POST" action="{{ route('admin.returns.store') }}" id="main-form">
                         @csrf
                         <div class="row">
                             <div class="col-sm-4">
@@ -54,13 +54,13 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <label for="invoice_number">@lang('trans.invoice_number')</label>
+                                    <label for="invoice_number">@lang('trans.return_number')</label>
                                     <input
                                         type="text"
                                         class="form-control @error('invoice_number') is-invalid @enderror"
                                         id="invoice_number"
                                         value="{{ old('invoice_number') }}"
-                                        placeholder="@lang('trans.invoice_number')"
+                                        placeholder="@lang('trans.return_number')"
                                         name="invoice_number">
                                     @error('invoice_number')
                                     <span class="invalid-feedback" role="alert">
@@ -221,7 +221,7 @@
                                     <label class="form-check-label" >@lang('trans.discount_type')</label>
                                     <div class="form-check">
                                         <input type="radio" class="form-check-input" id="discount_{{ $settings->discount_type->value }}"
-                                        name="discount_type" value='{{ $settings->discount_type->value }}' @if(old("discount_type",$settings->discount_type->value))   checked @endif>
+                                        name="discount_type" value='{{ $settings->discount_type->value }}' @if(old("discount_type", $settings->discount_type->value ))   checked @endif>
                                         <label class="form-check-label" for="discount_{{ $settings->discount_type->value}}">{{  $settings->discount_type->label() }}</label>
                                     </div>
                                 </div>

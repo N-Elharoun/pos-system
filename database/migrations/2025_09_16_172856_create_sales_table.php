@@ -23,6 +23,7 @@ class CreateSalesTable extends Migration
             $table->decimal('paid_amount', 10, 2)->default(0);
             $table->decimal('remaining_amount', 10, 2)->default(0);
             $table->string('invoice_number');
+            $table->tinyInteger('type');
             $table->tinyInteger('payment_type');
         });
     }
