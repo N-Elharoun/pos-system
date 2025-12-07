@@ -122,7 +122,7 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         $item = Item::findOrFail($id);
-        if ($item->sales()->exists() || $item->returns()->exists()) {
+        if ($item->sales()->exists()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Cannot delete item with associated sales or returns.',
